@@ -25,6 +25,12 @@ const frames = createFrames({
 
 type ImageOptions = ConstructorParameters<typeof ImageResponse>[1];
 
+const backButton = (
+  <Button action="post" target={{ query: { op: "initial" } }}>
+    ← Back to Home
+  </Button>
+);
+
 const handleRequest = frames(async (ctx) => {
   const [regularFontData, boldFontData] = await Promise.all([
     regularFont,
@@ -46,23 +52,39 @@ const handleRequest = frames(async (ctx) => {
     ],
   } satisfies ImageOptions;
 
-  const content = ctx.message?.inputText ?? "";
-  const error = (() => {
-    try {
-      new URL(content);
-      return null;
-    } catch (e) {
-      if (e instanceof TypeError) {
-        return "Invalid URL";
-      } else {
-        return "Unknown error";
+  const { op, content, error } = (() => {
+    let op = ctx.searchParams.op;
+
+    const content =
+      ctx.searchParams.content ?? ctx.message?.inputText?.trim() ?? "";
+
+    const error = (() => {
+      if (!op || op === "initial") {
+        return null;
       }
+
+      if (content === "") {
+        return "Empty URL";
+      }
+
+      try {
+        new URL(content);
+        return null;
+      } catch (e) {
+        if (e instanceof TypeError) {
+          return "Invalid URL";
+        } else {
+          return "Unknown error";
+        }
+      }
+    })();
+
+    if (error) {
+      op = "error";
     }
+
+    return { op, content, error };
   })();
-  const op =
-    error && ctx.searchParams.op === "" && content !== ""
-      ? "error"
-      : ctx.searchParams.op;
 
   switch (op) {
     case "check": {
@@ -77,11 +99,7 @@ const handleRequest = frames(async (ctx) => {
               <span tw="font-bold">{result.error}</span>
             </div>
           ),
-          buttons: [
-            <Button action="post" target={{ query: { op: "initial" } }}>
-              Back to Home
-            </Button>,
-          ],
+          buttons: [backButton],
         };
       }
 
@@ -114,15 +132,20 @@ const handleRequest = frames(async (ctx) => {
           </div>
         ),
         buttons: [
-          <Button action="post" target={{ query: { op: "initial" } }}>
-            Back to Home
-          </Button>,
-          <Button
-            action="link"
-            target={`https://app.chainpatrol.io/search?content=${result.url}`}
-          >
-            Details
-          </Button>,
+          backButton,
+          (result.status === "ALLOWED" || result.status === "BLOCKED") && (
+            <Button
+              action="link"
+              target={`https://app.chainpatrol.io/search?content=${result.url}`}
+            >
+              Details
+            </Button>
+          ),
+          result.status === "UNKNOWN" && (
+            <Button action="post" target={{ query: { op: "report", content } }}>
+              🥷 Report
+            </Button>
+          ),
         ],
       };
     }
@@ -163,7 +186,13 @@ const handleRequest = frames(async (ctx) => {
         imageOptions,
         image: (
           <div tw="flex flex-col">
-            <div tw="flex ">Enter a URL to check or report:</div>
+            <div tw="flex flex-col">
+              <h1 tw="text-2xl font-bold leading-none mb-0">ChainPatrol</h1>
+              <h2 tw="text-5xl font-bold leading-none mt-6">URL Checker</h2>
+            </div>
+            <div tw="flex">
+              <p tw="mt-0">Enter a URL to check or report:</p>
+            </div>
           </div>
         ),
         textInput: "Type a URL",
