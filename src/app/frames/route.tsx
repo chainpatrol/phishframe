@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import { createFrames, Button } from "frames.js/next";
-import { ThreatDetector } from "@chainpatrol/sdk";
+import { ChainPatrolClient } from "@chainpatrol/sdk";
 import { ImageResponse } from "@vercel/og";
+import { farcasterHubContext } from "frames.js/middleware";
 
 export const runtime = "edge";
 
-const detector = new ThreatDetector({
-  mode: "cloud",
+const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
+  baseUrl: "http://localhost:3000/api",
 });
 
 const regularFont = fetch(
@@ -19,8 +20,17 @@ const boldFont = fetch(
   new URL("/public/assets/inter-latin-700-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
+const DEFAULT_DEBUGGER_URL =
+  process.env.DEBUGGER_URL ?? "http://localhost:3010/";
+
+const DEFAULT_DEBUGGER_HUB_URL =
+  process.env.NODE_ENV === "development"
+    ? new URL("/hub", DEFAULT_DEBUGGER_URL).toString()
+    : undefined;
+
 const frames = createFrames({
   basePath: "/frames",
+  middleware: [farcasterHubContext({ hubHttpUrl: DEFAULT_DEBUGGER_HUB_URL })],
 });
 
 type ImageOptions = ConstructorParameters<typeof ImageResponse>[1];
@@ -88,78 +98,110 @@ const handleRequest = frames(async (ctx) => {
 
   switch (op) {
     case "check": {
-      const result = await detector.url(content);
+      try {
+        const result = await chainpatrol.asset.check({
+          content,
+        });
 
-      if (!result.ok) {
+        return {
+          imageOptions,
+          image: (
+            <div tw="flex flex-col items-center">
+              {result.status === "ALLOWED" && (
+                <div tw="flex">
+                  <span tw="mr-2">✅ Allowed</span>
+                </div>
+              )}
+
+              {result.status === "BLOCKED" && (
+                <div tw="flex">
+                  <span tw="mr-2">🚫 Blocked</span>
+                </div>
+              )}
+
+              {(result.status === "UNKNOWN" || result.status === "IGNORED") && (
+                <div tw="flex">
+                  <span tw="mr-2">❓ Unknown</span>
+                </div>
+              )}
+
+              <div tw="flex mt-2">
+                <span tw="mr-2">🔗 URL: </span>
+                <span tw="font-bold">{content}</span>
+              </div>
+            </div>
+          ),
+          buttons: [
+            backButton,
+            (result.status === "ALLOWED" || result.status === "BLOCKED") && (
+              <Button
+                action="link"
+                target={`https://app.chainpatrol.io/search?content=${result.url}`}
+              >
+                Details
+              </Button>
+            ),
+            result.status === "UNKNOWN" && (
+              <Button
+                action="post"
+                target={{ query: { op: "report", content } }}
+              >
+                🥷 Report
+              </Button>
+            ),
+          ],
+        };
+      } catch (e) {
         return {
           imageOptions,
           image: (
             <div tw="flex">
               <span tw="mr-2">❌ Error: </span>
-              <span tw="font-bold">{result.error}</span>
+              <span tw="font-bold">
+                {e instanceof Error ? e.message : "Unknown error occurred"}
+              </span>
             </div>
           ),
           buttons: [backButton],
         };
       }
-
-      return {
-        imageOptions,
-        image: (
-          <div tw="flex flex-col items-center">
-            {result.status === "ALLOWED" && (
-              <div tw="flex">
-                <span tw="mr-2">✅ Allowed</span>
-              </div>
-            )}
-
-            {result.status === "BLOCKED" && (
-              <div tw="flex">
-                <span tw="mr-2">🚫 Blocked</span>
-              </div>
-            )}
-
-            {(result.status === "UNKNOWN" || result.status === "IGNORED") && (
-              <div tw="flex">
-                <span tw="mr-2">❓ Unknown</span>
-              </div>
-            )}
-
-            <div tw="flex mt-2">
-              <span tw="mr-2">🔗 URL: </span>
-              <span tw="font-bold">{result.url}</span>
-            </div>
-          </div>
-        ),
-        buttons: [
-          backButton,
-          (result.status === "ALLOWED" || result.status === "BLOCKED") && (
-            <Button
-              action="link"
-              target={`https://app.chainpatrol.io/search?content=${result.url}`}
-            >
-              Details
-            </Button>
-          ),
-          result.status === "UNKNOWN" && (
-            <Button action="post" target={{ query: { op: "report", content } }}>
-              🥷 Report
-            </Button>
-          ),
-        ],
-      };
     }
 
     case "report": {
+      const result = await chainpatrol.report.create({
+        organizationSlug: "chainpatrol",
+        title: `Farcaster frame report: ${content}`,
+        description: `This report was created from the ChainPatrol Farcaster frame. The user reported the following URL: ${content}`,
+        externalReporter: ctx.message?.requesterUserData && {
+          platform: "farcaster",
+          platformIdentifier: ctx.message.requesterUserData.username,
+          displayName: ctx.message.requesterUserData.displayName,
+          avatarUrl: ctx.message.requesterUserData.profileImage,
+        },
+        assets: [
+          {
+            content,
+            status: "BLOCKED",
+          },
+        ],
+      });
+
+      const reportUrl = `http://localhost:3000/reports/${result.id}`;
+
       return {
         imageOptions,
         image: (
           <div tw="flex">
-            <span tw="mr-2">⏳ Reporting </span>
-            <span tw="font-bold">{content}</span>
-            <span>...</span>
+            <span tw="mr-2">🥷 Reported</span>
+            <span tw="font-bold">Thank you for your report!</span>
           </div>
         ),
+        buttons: [
+          backButton,
+          <Button action="link" target={reportUrl}>
+            View Report
+          </Button>,
+        ],
       };
     }
 
