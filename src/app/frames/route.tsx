@@ -9,7 +9,7 @@ export const runtime = "edge";
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
-  baseUrl: "http://localhost:3000/api",
+  baseUrl: process.env.CHAINPATROL_API_URL,
 });
 
 const regularFont = fetch(
@@ -136,7 +136,7 @@ const handleRequest = frames(async (ctx) => {
             (result.status === "ALLOWED" || result.status === "BLOCKED") && (
               <Button
                 action="link"
-                target={`https://app.chainpatrol.io/search?content=${result.url}`}
+                target={`${process.env.CHAINPATROL_APP_URL}/search?content=${result.url}`}
               >
                 Details
               </Button>
@@ -186,7 +186,7 @@ const handleRequest = frames(async (ctx) => {
         ],
       });
 
-      const reportUrl = `http://localhost:3000/reports/${result.id}`;
+      const reportUrl = `${process.env.CHAINPATROL_APP_URL}/reports/${result.id}`;
 
       return {
         imageOptions,
@@ -230,7 +230,9 @@ const handleRequest = frames(async (ctx) => {
           <div tw="flex flex-col">
             <div tw="flex flex-col">
               <h1 tw="text-2xl font-bold leading-none mb-0">ChainPatrol</h1>
-              <h2 tw="text-5xl font-bold leading-none mt-6">URL Checker</h2>
+              <h2 tw="text-5xl font-bold leading-none mt-6">
+                Threat Detection Tools
+              </h2>
             </div>
             <div tw="flex">
               <p tw="mt-0">Enter a URL to check or report:</p>
