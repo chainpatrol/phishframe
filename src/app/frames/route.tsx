@@ -426,8 +426,8 @@ const handleRequest = frames(async (ctx) => {
                 Threat Detection Tools
               </h1>
               <p tw="mt-0 text-neutral-400 text-2xl leading-relaxed">
-                Use our tools to check if a URL is safe to visit or report a
-                suspicious URL to our team to investigate.
+                Type a valid URL below and click &quot;Check&quot; to see if
+                it&apos;s safe or &quot;Report&quot; to report a phishing site.
               </p>
 
               <span tw="text-neutral-200 text-2xl mt-4">
