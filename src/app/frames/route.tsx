@@ -78,11 +78,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 
           <div tw="flex-1 justify-center flex text-white/50 text-lg">
             <span>📁</span>
+            <span tw="ml-2">Farcaster</span>
+            <span tw="ml-2">•</span>
             <span tw="ml-2">ChainPatrol</span>
             <span tw="ml-2">•</span>
-            <span tw="ml-2">Threat Detection Tools</span>
-            <span tw="ml-2">•</span>
-            <span tw="ml-2">Farcaster</span>
+            <span tw="ml-2">PhishFrame</span>
           </div>
 
           <div tw="flex">
@@ -201,7 +201,7 @@ const handleRequest = frames(async (ctx) => {
           >
             <div tw="flex mt-2 mb-4">
               <span tw="text-2xl mr-4">$ </span>
-              <span tw="text-2xl mr-3">chainpatrol {op}</span>
+              <span tw="text-2xl mr-3">phishframe {op}</span>
               <span tw="text-2xl text-purple-300">$INPUT</span>
             </div>
 
@@ -233,7 +233,7 @@ const handleRequest = frames(async (ctx) => {
               >
                 <div tw="flex mt-2 mb-4">
                   <span tw="text-2xl mr-4">$ </span>
-                  <span tw="text-2xl mr-3">chainpatrol check</span>
+                  <span tw="text-2xl mr-3">phishframe check</span>
                   <span tw="text-2xl text-purple-300">$INPUT</span>
                 </div>
 
@@ -329,7 +329,7 @@ const handleRequest = frames(async (ctx) => {
       };
 
       const result = await chainpatrol.report.create({
-        organizationSlug: "chainpatrol",
+        organizationSlug: "phishframe",
         title,
         description,
         externalReporter: reporter,
@@ -350,7 +350,7 @@ const handleRequest = frames(async (ctx) => {
             >
               <div tw="flex mt-2 mb-4">
                 <span tw="text-2xl mr-4">$ </span>
-                <span tw="text-2xl mr-3">chainpatrol report</span>
+                <span tw="text-2xl mr-3">phishframe report</span>
                 <span tw="text-2xl text-purple-300">$INPUT</span>
               </div>
 
@@ -419,11 +419,11 @@ const handleRequest = frames(async (ctx) => {
             >
               <div tw="flex mt-2 mb-4">
                 <span tw="text-2xl mr-4">$ </span>
-                <span tw="text-2xl mr-3">chainpatrol --help</span>
+                <span tw="text-2xl mr-3">phishframe --help</span>
               </div>
 
               <h1 tw="text-2xl font-bold leading-none mt-6 mb-6 text-white">
-                Threat Detection Tools
+                PhishFrame
               </h1>
               <p tw="mt-0 text-neutral-400 text-2xl leading-relaxed">
                 Type a valid URL below and click &quot;Check&quot; to see if
