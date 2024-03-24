@@ -102,6 +102,58 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ErrorMessage({ op, error }: { op: string; error: string }) {
+  return (
+    <Layout>
+      <div
+        tw="flex flex-col h-full mt-8 text-2xl"
+        style={{ fontFamily: "'Fira Code', monospace" }}
+      >
+        <div tw="flex mt-2 mb-4">
+          <span tw="mr-4">$ </span>
+          <span tw="mr-3">phishframe {op}</span>
+          <span tw="text-purple-300">$INPUT</span>
+        </div>
+
+        <div tw="flex text-neutral-400">
+          <span tw="mr-2">Error:</span>
+          <span tw="text-red-300">&quot;{error}&quot;</span>
+        </div>
+      </div>
+    </Layout>
+  );
+}
+
+function Status({
+  status,
+  label,
+}: {
+  status: "ALLOWED" | "BLOCKED" | "UNKNOWN" | "IGNORED";
+  label?: string;
+}) {
+  const color = (() => {
+    switch (status) {
+      case "ALLOWED":
+        return "green";
+      case "BLOCKED":
+        return "red";
+      case "UNKNOWN":
+      case "IGNORED":
+        return "neutral";
+      default:
+        return "neutral";
+    }
+  })();
+
+  return (
+    <span
+      tw={`bg-${color}-300 text-neutral-800 px-2 py-0.5 leading-none font-bold uppercase`}
+    >
+      {label ?? status}
+    </span>
+  );
+}
+
 const handleRequest = frames(async (ctx) => {
   // const [
   //   interRegularFontData,
@@ -179,25 +231,7 @@ const handleRequest = frames(async (ctx) => {
     console.error(error);
     return {
       imageOptions,
-      image: (
-        <Layout>
-          <div
-            tw="flex flex-col h-full mt-8 text-2xl"
-            style={{ fontFamily: "'Fira Code', monospace" }}
-          >
-            <div tw="flex mt-2 mb-4">
-              <span tw="mr-4">$ </span>
-              <span tw="mr-3">phishframe {op}</span>
-              <span tw="text-purple-300">$INPUT</span>
-            </div>
-
-            <div tw="flex text-neutral-400">
-              <span tw="mr-2">Error:</span>
-              <span tw="text-red-300">&quot;{error}&quot;</span>
-            </div>
-          </div>
-        </Layout>
-      ),
+      image: <ErrorMessage op={op} error={error} />,
       buttons: [backButton],
     };
   }
@@ -231,18 +265,14 @@ const handleRequest = frames(async (ctx) => {
                 {result.status === "ALLOWED" && (
                   <div tw="flex items-center">
                     <span tw="mr-2">Status:</span>
-                    <span tw="bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
-                      ALLOWED
-                    </span>
+                    <Status status="ALLOWED" />
                   </div>
                 )}
 
                 {result.status === "BLOCKED" && (
                   <div tw="flex items-center">
                     <span tw="mr-2">Status:</span>
-                    <span tw="bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
-                      BLOCKED
-                    </span>
+                    <Status status="BLOCKED" />
                   </div>
                 )}
 
@@ -250,9 +280,7 @@ const handleRequest = frames(async (ctx) => {
                   result.status === "IGNORED") && (
                   <div tw="flex items-center">
                     <span tw="mr-2">Status:</span>
-                    <span tw="bg-neutral-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
-                      UNKNOWN
-                    </span>
+                    <Status status="UNKNOWN" />
                   </div>
                 )}
               </div>
@@ -285,14 +313,10 @@ const handleRequest = frames(async (ctx) => {
         return {
           imageOptions,
           image: (
-            <Layout>
-              <div tw="flex justify-center items-center h-full">
-                <span tw="mr-2">❌ Error: </span>
-                <span tw="font-bold">
-                  {e instanceof Error ? e.message : "Unknown error occurred"}
-                </span>
-              </div>
-            </Layout>
+            <ErrorMessage
+              op={op}
+              error={e instanceof Error ? e.message : "Unknown error occurred"}
+            />
           ),
           buttons: [backButton],
         };
@@ -363,16 +387,12 @@ const handleRequest = frames(async (ctx) => {
                   {assets.map((a) => (
                     <>
                       {a.status === "ALLOWED" && (
-                        <span tw="mr-3 bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
-                          ALLOW
-                        </span>
+                        <Status status="ALLOWED" label="Allow" />
                       )}
                       {a.status === "BLOCKED" && (
-                        <span tw="mr-3 bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
-                          BLOCK
-                        </span>
+                        <Status status="BLOCKED" label="Block" />
                       )}
-                      <span>{a.content}</span>
+                      <span tw="ml-3">{a.content}</span>
                     </>
                   ))}
                 </span>
