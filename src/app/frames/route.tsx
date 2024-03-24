@@ -20,12 +20,12 @@ const interRegularFont = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
-const interBoldFont = fetch(
-  new URL(
-    "../../../public/assets/fonts/inter-latin-700-normal.ttf",
-    import.meta.url
-  )
-).then((res) => res.arrayBuffer());
+// const interBoldFont = fetch(
+//   new URL(
+//     "../../../public/assets/fonts/inter-latin-700-normal.ttf",
+//     import.meta.url
+//   )
+// ).then((res) => res.arrayBuffer());
 
 const firaCodeRegularFont = fetch(
   new URL(
@@ -118,12 +118,12 @@ function Layout({ children }: { children: React.ReactNode }) {
 const handleRequest = frames(async (ctx) => {
   const [
     interRegularFontData,
-    interBoldFontData,
+    // interBoldFontData,
     firaCodeRegularFontData,
     firaCodeBoldFontData,
   ] = await Promise.all([
     interRegularFont,
-    interBoldFont,
+    // interBoldFont,
     firaCodeRegularFont,
     firaCodeBoldFont,
   ]);
@@ -135,11 +135,11 @@ const handleRequest = frames(async (ctx) => {
         data: interRegularFontData,
         weight: 400,
       },
-      {
-        name: "Inter",
-        data: interBoldFontData,
-        weight: 700,
-      },
+      // {
+      //   name: "Inter",
+      //   data: interBoldFontData,
+      //   weight: 700,
+      // },
       {
         name: "Fira Code",
         data: firaCodeRegularFontData,
