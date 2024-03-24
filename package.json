@@ -30,9 +30,6 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   },
-  "resolutions": {
-    "@farcaster/core": "0.14.7"
-  },
   "engines": {
     "node": "^20.0.0"
   }

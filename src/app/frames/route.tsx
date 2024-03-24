@@ -5,11 +5,11 @@ import { farcasterHubContext } from "frames.js/middleware";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+// import fs from "fs/promises";
+// import path from "path";
+// import { fileURLToPath } from "url";
 
-export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
+export const runtime = "edge"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
@@ -17,17 +17,17 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 async function loadFont(file: string) {
-  // const res = await fetch(
-  //   new URL(`../../../public/assets/fonts/${file}`, import.meta.url)
-  // );
-  // return res.arrayBuffer();
-  return fs.promises.readFile(
-    path.join(
-      fileURLToPath(import.meta.url),
-      "../../../../public/assets/fonts/",
-      file
-    )
+  const res = await fetch(
+    new URL(`../../../public/assets/fonts/${file}`, import.meta.url)
   );
+  return res.arrayBuffer();
+  // return fs.readFile(
+  //   path.join(
+  //     fileURLToPath(import.meta.url),
+  //     "../../../../public/assets/fonts/",
+  //     file
+  //   )
+  // );
 }
 
 const interRegularFont = loadFont("inter-latin-400-normal.ttf");
