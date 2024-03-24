@@ -147,27 +147,27 @@ function Status({
 
 const handleRequest = frames(async (ctx) => {
   const interRegularFont = fs.readFile(
-    path.join(
+    path.resolve(
       fileURLToPath(import.meta.url),
-      "../../../../assets/fonts/inter-latin-400-normal.ttf"
+      "../assets/fonts/inter-latin-400-normal.ttf"
     )
   );
   const interBoldFont = fs.readFile(
-    path.join(
+    path.resolve(
       fileURLToPath(import.meta.url),
-      "../../../../assets/fonts/inter-latin-700-normal.ttf"
+      "../assets/fonts/inter-latin-700-normal.ttf"
     )
   );
   const firaCodeRegularFont = fs.readFile(
-    path.join(
+    path.resolve(
       fileURLToPath(import.meta.url),
-      "../../../../assets/fonts/fira-code-latin-400-normal.ttf"
+      "../assets/fonts/fira-code-latin-400-normal.ttf"
     )
   );
   const firaCodeBoldFont = fs.readFile(
-    path.join(
+    path.resolve(
       fileURLToPath(import.meta.url),
-      "../../../../assets/fonts/fira-code-latin-700-normal.ttf"
+      "../assets/fonts/fira-code-latin-700-normal.ttf"
     )
   );
 
