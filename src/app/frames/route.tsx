@@ -6,7 +6,7 @@ import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
 
-export const runtime = "edge"; // TODO: figure out why bundle size is so large with 'edge' runtime
+export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
