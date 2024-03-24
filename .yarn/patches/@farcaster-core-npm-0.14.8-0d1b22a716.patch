@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 610130da9cd9b15913b440e442ae9b78888d97da..dceb5134150f24918ee0ae7c11cee4cef3216e1a 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,7 @@
+ {
+   "name": "@farcaster/core",
+   "version": "0.14.8",
++  "sideEffects": false,
+   "main": "./dist/index.js",
+   "module": "./dist/index.mjs",
+   "types": "./dist/index.d.ts",

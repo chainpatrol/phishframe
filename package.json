@@ -32,5 +32,9 @@
   },
   "engines": {
     "node": "^20.0.0"
+  },
+  "packageManager": "yarn@4.1.1",
+  "resolutions": {
+    "@farcaster/core@npm:^0.14.7": "patch:@farcaster/core@npm%3A0.14.8#~/.yarn/patches/@farcaster-core-npm-0.14.8-0d1b22a716.patch"
   }
 }

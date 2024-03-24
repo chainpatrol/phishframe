@@ -147,7 +147,7 @@ function Status({
 
   return (
     <span
-      tw={`bg-${color}-300 text-neutral-800 px-2 py-0.5 leading-none font-bold uppercase`}
+      tw={`bg-${color}-300 text-neutral-800 px-2 py-0.5 text-2xl leading-none font-bold uppercase`}
     >
       {label ?? status}
     </span>
@@ -429,10 +429,10 @@ const handleRequest = frames(async (ctx) => {
                 <span tw="mr-3">phishframe --help</span>
               </div>
 
-              <h1 tw="font-bold leading-none mt-6 mb-6 text-white">
+              <h1 tw="font-bold text-2xl leading-none mt-6 mb-6 text-white">
                 PhishFrame
               </h1>
-              <p tw="mt-0 text-neutral-400 leading-relaxed">
+              <p tw="mt-0 text-neutral-400 text-2xl leading-relaxed">
                 Type a valid URL below and click &quot;Check&quot; to see if
                 it&apos;s safe or &quot;Report&quot; to report a phishing site.
               </p>
