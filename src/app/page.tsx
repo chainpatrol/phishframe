@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 p-8 md:p-24">
       <nav className="w-full max-w-3xl">
-        <ul className="flex justify-center gap-8">
+        <ul className="flex justify-center gap-12">
           <li>
             <a
               href="https://ethglobal.com/showcase/phishframe-5ihsk"
@@ -50,7 +50,7 @@ export default function Home() {
           </li>
           <li>
             <a
-              href="https://chainpatrol.com"
+              href="https://warpcast.com/umariomaker/0x60217f41"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex gap-2 items-center text-sm font-semibold tracking-tight hover:underline underline-offset-4 text-neutral-800 dark:text-neutral-400 hover:text-teal-600"
@@ -61,6 +61,14 @@ export default function Home() {
           </li>
         </ul>
       </nav>
+
+      <Image
+        src="/images/phishy.png"
+        alt="PhishFrame"
+        className="scale-100 hover:scale-110 transition-transform duration-300 ease-in-out"
+        width={300}
+        height={300}
+      />
 
       <div className="flex flex-col items-center gap-3">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
@@ -93,13 +101,6 @@ export default function Home() {
           protection. Stay safe out there, friends!
         </p>
       </div>
-
-      <Image
-        src="/images/phishy.png"
-        alt="PhishFrame"
-        width={300}
-        height={300}
-      />
     </main>
   );
 }
