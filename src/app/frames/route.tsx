@@ -7,7 +7,6 @@ import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { fileURLToPath } from "node:url";
 
 export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
@@ -147,27 +146,27 @@ function Status({
 
 const handleRequest = frames(async (ctx) => {
   const interRegularFont = fs.readFile(
-    path.resolve(
-      fileURLToPath(import.meta.url),
-      "../../../../public/fonts/inter-latin-400-normal.ttf"
+    path.join(
+      path.resolve(process.cwd(), "public", "fonts"),
+      "inter-latin-400-normal.ttf"
     )
   );
   const interBoldFont = fs.readFile(
-    path.resolve(
-      fileURLToPath(import.meta.url),
-      "../../../../public/fonts/inter-latin-700-normal.ttf"
+    path.join(
+      path.resolve(process.cwd(), "public", "fonts"),
+      "inter-latin-700-normal.ttf"
     )
   );
   const firaCodeRegularFont = fs.readFile(
-    path.resolve(
-      fileURLToPath(import.meta.url),
-      "../../../../public/fonts/fira-code-latin-400-normal.ttf"
+    path.join(
+      path.resolve(process.cwd(), "public", "fonts"),
+      "fira-code-latin-400-normal.ttf"
     )
   );
   const firaCodeBoldFont = fs.readFile(
-    path.resolve(
-      fileURLToPath(import.meta.url),
-      "../../../../public/fonts/fira-code-latin-700-normal.ttf"
+    path.join(
+      path.resolve(process.cwd(), "public", "fonts"),
+      "fira-code-latin-700-normal.ttf"
     )
   );
 
