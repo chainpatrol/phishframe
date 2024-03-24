@@ -14,23 +14,29 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 const interRegularFont = fetch(
-  new URL("/public/assets/fonts/inter-latin-400-normal.ttf", import.meta.url)
+  new URL(
+    "../../../public/assets/fonts/inter-latin-400-normal.ttf",
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 const interBoldFont = fetch(
-  new URL("/public/assets/fonts/inter-latin-700-normal.ttf", import.meta.url)
+  new URL(
+    "../../../public/assets/fonts/inter-latin-700-normal.ttf",
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 const firaCodeRegularFont = fetch(
   new URL(
-    "/public/assets/fonts/fira-code-latin-400-normal.ttf",
+    "../../../public/assets/fonts/fira-code-latin-400-normal.ttf",
     import.meta.url
   )
 ).then((res) => res.arrayBuffer());
 
 const firaCodeBoldFont = fetch(
   new URL(
-    "/public/assets/fonts/fira-code-latin-700-normal.ttf",
+    "../../../public/assets/fonts/fira-code-latin-700-normal.ttf",
     import.meta.url
   )
 ).then((res) => res.arrayBuffer());
