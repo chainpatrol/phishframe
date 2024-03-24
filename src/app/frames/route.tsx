@@ -2,11 +2,11 @@
 /* eslint-disable react/jsx-key */
 import { createFrames, Button } from "frames.js/next";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
-import { ImageResponse } from "@vercel/og";
+import type { ImageResponse } from "@vercel/og";
 import { farcasterHubContext } from "frames.js/middleware";
 import normalizeUrl from "normalize-url";
 
-export const runtime = "nodejs"; // todo: figure out how to optimize bundle to use edge runtime
+export const runtime = "edge";
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,

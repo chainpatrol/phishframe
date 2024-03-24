@@ -1,7 +1,11 @@
 import analyzer from "@next/bundle-analyzer";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  experimental: {
+    optimizePackageImports: ["@farcaster/core", "frames.js"],
+  },
+};
 
 const withBundleAnalyzer = analyzer({
   enabled: process.env.ANALYZE === "true",
