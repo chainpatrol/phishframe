@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
+    "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@chainpatrol/sdk": "^0.4.0",
+    "@next/bundle-analyzer": "^14.1.4",
     "@vercel/og": "^0.6.2",
     "frames.js": "^0.9.5",
     "next": "14.1.4",

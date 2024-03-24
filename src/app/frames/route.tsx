@@ -6,7 +6,7 @@ import { ImageResponse } from "@vercel/og";
 import { farcasterHubContext } from "frames.js/middleware";
 import normalizeUrl from "normalize-url";
 
-export const runtime = "edge";
+export const runtime = "nodejs"; // todo: figure out how to optimize bundle to use edge runtime
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
@@ -90,7 +90,9 @@ function Layout({ children }: { children: React.ReactNode }) {
       <div tw="flex items-center justify-between py-2 mt-4 w-full">
         <div tw="flex items-center justify-center">
           <img
-            src="http://localhost:3001/assets/images/logo.svg"
+            src={`${
+              process.env.VERCEL_URL ?? "http://localhost:3001"
+            }/assets/images/logo.svg`}
             alt="ChainPatrol Logo"
             tw="w-12 h-12"
           />
