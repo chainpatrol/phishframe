@@ -81,7 +81,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <div tw="flex items-center justify-center">
           <img
             src={`${
-              process.env.VERCEL_URL ??
+              (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ??
               (process.env.RAILWAY_PUBLIC_DOMAIN &&
                 `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`) ??
               "http://localhost:3001"
