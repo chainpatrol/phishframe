@@ -2,16 +2,16 @@
 /* eslint-disable react/jsx-key */
 import { createFrames, Button } from "frames.js/next";
 import { farcasterHubContext } from "frames.js/middleware";
-// import { ChainPatrolClient } from "@chainpatrol/sdk";
+import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
-// import normalizeUrl from "normalize-url";
+import normalizeUrl from "normalize-url";
 
 export const runtime = "edge";
 
-// const chainpatrol = new ChainPatrolClient({
-//   apiKey: process.env.CHAINPATROL_API_KEY!,
-//   baseUrl: process.env.CHAINPATROL_API_URL,
-// });
+const chainpatrol = new ChainPatrolClient({
+  apiKey: process.env.CHAINPATROL_API_KEY!,
+  baseUrl: process.env.CHAINPATROL_API_URL,
+});
 
 const interRegularFont = fetch(
   new URL(
@@ -20,12 +20,12 @@ const interRegularFont = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
-// const interBoldFont = fetch(
-//   new URL(
-//     "../../../public/assets/fonts/inter-latin-700-normal.ttf",
-//     import.meta.url
-//   )
-// ).then((res) => res.arrayBuffer());
+const interBoldFont = fetch(
+  new URL(
+    "../../../public/assets/fonts/inter-latin-700-normal.ttf",
+    import.meta.url
+  )
+).then((res) => res.arrayBuffer());
 
 const firaCodeRegularFont = fetch(
   new URL(
@@ -34,12 +34,12 @@ const firaCodeRegularFont = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
-// const firaCodeBoldFont = fetch(
-//   new URL(
-//     "../../../public/assets/fonts/fira-code-latin-700-normal.ttf",
-//     import.meta.url
-//   )
-// ).then((res) => res.arrayBuffer());
+const firaCodeBoldFont = fetch(
+  new URL(
+    "../../../public/assets/fonts/fira-code-latin-700-normal.ttf",
+    import.meta.url
+  )
+).then((res) => res.arrayBuffer());
 
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
@@ -121,14 +121,14 @@ function Layout({ children }: { children: React.ReactNode }) {
 const handleRequest = frames(async (ctx) => {
   const [
     interRegularFontData,
-    // interBoldFontData,
+    interBoldFontData,
     firaCodeRegularFontData,
-    // firaCodeBoldFontData,
+    firaCodeBoldFontData,
   ] = await Promise.all([
     interRegularFont,
-    // interBoldFont,
+    interBoldFont,
     firaCodeRegularFont,
-    // firaCodeBoldFont,
+    firaCodeBoldFont,
   ]);
 
   const imageOptions = {
@@ -138,21 +138,21 @@ const handleRequest = frames(async (ctx) => {
         data: interRegularFontData,
         weight: 400,
       },
-      // {
-      //   name: "Inter",
-      //   data: interBoldFontData,
-      //   weight: 700,
-      // },
+      {
+        name: "Inter",
+        data: interBoldFontData,
+        weight: 700,
+      },
       {
         name: "Fira Code",
         data: firaCodeRegularFontData,
         weight: 400,
       },
-      // {
-      //   name: "Fira Code",
-      //   data: firaCodeBoldFontData,
-      //   weight: 700,
-      // },
+      {
+        name: "Fira Code",
+        data: firaCodeBoldFontData,
+        weight: 700,
+      },
     ],
   } satisfies ImageOptions;
 
@@ -163,7 +163,9 @@ const handleRequest = frames(async (ctx) => {
       try {
         const url = new URL(
           ctx.searchParams.content ??
-            (ctx.message?.inputText ? ctx.message?.inputText?.trim() ?? "" : "")
+            (ctx.message?.inputText
+              ? normalizeUrl(ctx.message?.inputText?.trim()) ?? ""
+              : "")
         );
         return url.toString();
       } catch (e) {
@@ -217,12 +219,9 @@ const handleRequest = frames(async (ctx) => {
   switch (op) {
     case "check": {
       try {
-        // const result = await chainpatrol.asset.check({
-        //   content,
-        // });
-        const result = {
-          status: "ALLOWED",
-        };
+        const result = await chainpatrol.asset.check({
+          content,
+        });
 
         return {
           imageOptions,
@@ -329,17 +328,13 @@ const handleRequest = frames(async (ctx) => {
         avatarUrl: ctx.message.requesterUserData.profileImage,
       };
 
-      // const result = await chainpatrol.report.create({
-      //   organizationSlug: "phishframe",
-      //   title,
-      //   description,
-      //   externalReporter: reporter,
-      //   assets,
-      // });
-
-      const result = {
-        id: 123,
-      };
+      const result = await chainpatrol.report.create({
+        organizationSlug: "phishframe",
+        title,
+        description,
+        externalReporter: reporter,
+        assets,
+      });
 
       const reportUrl = `${trimTrailingSlashes(
         process.env.CHAINPATROL_APP_URL!
