@@ -4,7 +4,7 @@ import { fetchMetadata } from "frames.js/next";
 import type { Metadata } from "next";
 import { Bolt, CodeSquare, Github } from "lucide-react";
 
-export const runtime = "force-static";
+export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
