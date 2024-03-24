@@ -17,10 +17,6 @@ const interRegularFont = fetch(
   new URL("/public/assets/fonts/inter-latin-400-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
-const interSemiboldFont = fetch(
-  new URL("/public/assets/fonts/inter-latin-600-normal.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
-
 const interBoldFont = fetch(
   new URL("/public/assets/fonts/inter-latin-700-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
@@ -98,7 +94,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             alt="ChainPatrol Logo"
             tw="w-12 h-12"
           />
-          <span tw="font-semibold tracking-tighter text-white/90 text-3xl ml-3">
+          <span tw="font-bold tracking-tighter text-white/90 text-3xl ml-3">
             ChainPatrol
           </span>
         </div>
@@ -114,13 +110,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 const handleRequest = frames(async (ctx) => {
   const [
     interRegularFontData,
-    interSemiboldFontData,
     interBoldFontData,
     firaCodeRegularFontData,
     firaCodeBoldFontData,
   ] = await Promise.all([
     interRegularFont,
-    interSemiboldFont,
     interBoldFont,
     firaCodeRegularFont,
     firaCodeBoldFont,
@@ -132,11 +126,6 @@ const handleRequest = frames(async (ctx) => {
         name: "Inter",
         data: interRegularFontData,
         weight: 400,
-      },
-      {
-        name: "Inter",
-        data: interSemiboldFontData,
-        weight: 600,
       },
       {
         name: "Inter",
