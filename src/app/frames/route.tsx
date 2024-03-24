@@ -144,32 +144,32 @@ function Status({
   );
 }
 
-const handleRequest = frames(async (ctx) => {
-  const interRegularFont = fs.readFile(
-    path.join(
-      path.resolve(process.cwd(), "public", "fonts"),
-      "inter-latin-400-normal.ttf"
-    )
-  );
-  const interBoldFont = fs.readFile(
-    path.join(
-      path.resolve(process.cwd(), "public", "fonts"),
-      "inter-latin-700-normal.ttf"
-    )
-  );
-  const firaCodeRegularFont = fs.readFile(
-    path.join(
-      path.resolve(process.cwd(), "public", "fonts"),
-      "fira-code-latin-400-normal.ttf"
-    )
-  );
-  const firaCodeBoldFont = fs.readFile(
-    path.join(
-      path.resolve(process.cwd(), "public", "fonts"),
-      "fira-code-latin-700-normal.ttf"
-    )
-  );
+const interRegularFont = fs.readFile(
+  path.join(
+    path.resolve(process.cwd(), "public", "fonts"),
+    "inter-latin-400-normal.ttf"
+  )
+);
+const interBoldFont = fs.readFile(
+  path.join(
+    path.resolve(process.cwd(), "public", "fonts"),
+    "inter-latin-700-normal.ttf"
+  )
+);
+const firaCodeRegularFont = fs.readFile(
+  path.join(
+    path.resolve(process.cwd(), "public", "fonts"),
+    "fira-code-latin-400-normal.ttf"
+  )
+);
+const firaCodeBoldFont = fs.readFile(
+  path.join(
+    path.resolve(process.cwd(), "public", "fonts"),
+    "fira-code-latin-700-normal.ttf"
+  )
+);
 
+const handleRequest = frames(async (ctx) => {
   const [
     interRegularFontData,
     interBoldFontData,
