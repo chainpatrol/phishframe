@@ -18,7 +18,7 @@ const chainpatrol = new ChainPatrolClient({
 async function loadFont(file: string) {
   const url = new URL(
     process.env.VERCEL
-      ? `../../../assets/fonts/${file}`
+      ? `/assets/fonts/${file}`
       : `../../../public/assets/fonts/${file}`,
     import.meta.url
   );
