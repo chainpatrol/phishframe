@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 p-8 md:p-24">
       <nav className="w-full max-w-3xl">
-        <ul className="flex justify-center gap-12">
+        <ul className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-12">
           <li>
             <a
               href="https://ethglobal.com/showcase/phishframe-5ihsk"
