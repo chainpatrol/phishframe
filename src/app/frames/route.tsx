@@ -16,7 +16,7 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 async function loadFont(file: string) {
-  const url = new URL(`../../../assets/fonts/${file}`, import.meta.url);
+  const url = new URL(`./_fonts/${file}`, import.meta.url);
   const filepath = fileURLToPath(url);
   // const res = await fetch(url);
   // return res.arrayBuffer();
@@ -98,7 +98,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </div>
 
         <span tw="text-white/50 text-[24px]">
-          Follow us <span tw="text-white/70 ml-2">@chainpatrol</span>
+          Follow us <span tw="text-white/70 ml-2 font-bold">@chainpatrol</span>
         </span>
       </div>
     </div>
