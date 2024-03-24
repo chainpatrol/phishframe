@@ -16,31 +16,6 @@ const chainpatrol = new ChainPatrolClient({
   baseUrl: process.env.CHAINPATROL_API_URL,
 });
 
-const interRegularFont = fs.readFile(
-  path.join(
-    fileURLToPath(import.meta.url),
-    "../../../../assets/fonts/inter-latin-400-normal.ttf"
-  )
-);
-const interBoldFont = fs.readFile(
-  path.join(
-    fileURLToPath(import.meta.url),
-    "../../../../assets/fonts/inter-latin-700-normal.ttf"
-  )
-);
-const firaCodeRegularFont = fs.readFile(
-  path.join(
-    fileURLToPath(import.meta.url),
-    "../../../../assets/fonts/fira-code-latin-400-normal.ttf"
-  )
-);
-const firaCodeBoldFont = fs.readFile(
-  path.join(
-    fileURLToPath(import.meta.url),
-    "../../../../assets/fonts/fira-code-latin-700-normal.ttf"
-  )
-);
-
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
 
@@ -171,6 +146,31 @@ function Status({
 }
 
 const handleRequest = frames(async (ctx) => {
+  const interRegularFont = fs.readFile(
+    path.join(
+      fileURLToPath(import.meta.url),
+      "../../../../assets/fonts/inter-latin-400-normal.ttf"
+    )
+  );
+  const interBoldFont = fs.readFile(
+    path.join(
+      fileURLToPath(import.meta.url),
+      "../../../../assets/fonts/inter-latin-700-normal.ttf"
+    )
+  );
+  const firaCodeRegularFont = fs.readFile(
+    path.join(
+      fileURLToPath(import.meta.url),
+      "../../../../assets/fonts/fira-code-latin-400-normal.ttf"
+    )
+  );
+  const firaCodeBoldFont = fs.readFile(
+    path.join(
+      fileURLToPath(import.meta.url),
+      "../../../../assets/fonts/fira-code-latin-700-normal.ttf"
+    )
+  );
+
   const [
     interRegularFontData,
     interBoldFontData,
