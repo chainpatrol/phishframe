@@ -4,6 +4,7 @@ import { createFrames, Button } from "frames.js/next";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import { ImageResponse } from "@vercel/og";
 import { farcasterHubContext } from "frames.js/middleware";
+import normalizeUrl from "normalize-url";
 
 export const runtime = "edge";
 
@@ -13,11 +14,15 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 const regularFont = fetch(
-  new URL("/public/assets/inter-latin-400-normal.ttf", import.meta.url)
+  new URL("/public/assets/fonts/inter-latin-400-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+
+const semiboldFont = fetch(
+  new URL("/public/assets/fonts/inter-latin-600-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
 const boldFont = fetch(
-  new URL("/public/assets/inter-latin-700-normal.ttf", import.meta.url)
+  new URL("/public/assets/fonts/inter-latin-700-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
 const DEFAULT_DEBUGGER_URL =
@@ -41,9 +46,57 @@ const backButton = (
   </Button>
 );
 
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div tw="w-screen h-screen bg-neutral-900 text-white flex flex-col items-center justify-center p-8 pb-4">
+      <div tw="flex flex-col bg-neutral-800 p-12 rounded-xl border border-white/30 shadow-lg w-full flex-1 relative">
+        <div tw="flex items-center absolute top-0 left-0 right-0 px-4 py-3">
+          {/* Mac stop lights */}
+          <div tw="flex">
+            <div tw="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
+            <div tw="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+            <div tw="w-4 h-4 bg-green-500 rounded-full"></div>
+          </div>
+
+          <div tw="flex-1 justify-center flex text-white/50 text-lg">
+            <span>📁</span>
+            <span tw="ml-2">ChainPatrol</span>
+            <span tw="ml-2">•</span>
+            <span tw="ml-2">Threat Detection Tools</span>
+            <span tw="ml-2">•</span>
+            <span tw="ml-2">Farcaster</span>
+          </div>
+
+          <div tw="flex">
+            <span tw="text-white/50 text-lg">🔒</span>
+          </div>
+        </div>
+        {children}
+      </div>
+      <div tw="flex items-center justify-between py-2 mt-4 w-full">
+        <div tw="flex items-center justify-center">
+          <img
+            src="http://localhost:3001/assets/images/logo.svg"
+            alt="ChainPatrol Logo"
+            tw="w-12 h-12"
+          />
+          <span tw="font-semibold tracking-tighter text-white/90 text-3xl ml-3">
+            ChainPatrol
+          </span>
+        </div>
+
+        <span tw="text-white/50 text-[24px]">
+          Follow us <span tw="text-white/70 ml-2">@chainpatrol</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 const handleRequest = frames(async (ctx) => {
-  const [regularFontData, boldFontData] = await Promise.all([
+  const [regularFontData, semiboldFontData, boldFontData] = await Promise.all([
     regularFont,
+    semiboldFont,
     boldFont,
   ]);
 
@@ -53,6 +106,11 @@ const handleRequest = frames(async (ctx) => {
         name: "Inter",
         data: regularFontData,
         weight: 400,
+      },
+      {
+        name: "Inter",
+        data: semiboldFontData,
+        weight: 600,
       },
       {
         name: "Inter",
@@ -66,7 +124,10 @@ const handleRequest = frames(async (ctx) => {
     let op = ctx.searchParams.op;
 
     const content =
-      ctx.searchParams.content ?? ctx.message?.inputText?.trim() ?? "";
+      ctx.searchParams.content ??
+      (ctx.message?.inputText
+        ? normalizeUrl(ctx.message?.inputText?.trim() ?? "")
+        : "");
 
     const error = (() => {
       if (!op || op === "initial") {
@@ -106,30 +167,33 @@ const handleRequest = frames(async (ctx) => {
         return {
           imageOptions,
           image: (
-            <div tw="flex flex-col items-center">
-              {result.status === "ALLOWED" && (
-                <div tw="flex">
-                  <span tw="mr-2">✅ Allowed</span>
-                </div>
-              )}
+            <Shell>
+              <div tw="flex flex-col items-center justify-center h-full">
+                {result.status === "ALLOWED" && (
+                  <div tw="flex">
+                    <span tw="mr-2">✅ Allowed</span>
+                  </div>
+                )}
 
-              {result.status === "BLOCKED" && (
-                <div tw="flex">
-                  <span tw="mr-2">🚫 Blocked</span>
-                </div>
-              )}
+                {result.status === "BLOCKED" && (
+                  <div tw="flex">
+                    <span tw="mr-2">🚫 Blocked</span>
+                  </div>
+                )}
 
-              {(result.status === "UNKNOWN" || result.status === "IGNORED") && (
-                <div tw="flex">
-                  <span tw="mr-2">❓ Unknown</span>
-                </div>
-              )}
+                {(result.status === "UNKNOWN" ||
+                  result.status === "IGNORED") && (
+                  <div tw="flex">
+                    <span tw="mr-2">❓ Unknown</span>
+                  </div>
+                )}
 
-              <div tw="flex mt-2">
-                <span tw="mr-2">🔗 URL: </span>
-                <span tw="font-bold">{content}</span>
+                <div tw="flex mt-2">
+                  <span tw="mr-2">🔗 URL: </span>
+                  <span tw="font-bold">{content}</span>
+                </div>
               </div>
-            </div>
+            </Shell>
           ),
           buttons: [
             backButton,
@@ -155,12 +219,14 @@ const handleRequest = frames(async (ctx) => {
         return {
           imageOptions,
           image: (
-            <div tw="flex">
-              <span tw="mr-2">❌ Error: </span>
-              <span tw="font-bold">
-                {e instanceof Error ? e.message : "Unknown error occurred"}
-              </span>
-            </div>
+            <Shell>
+              <div tw="flex justify-center items-center h-full">
+                <span tw="mr-2">❌ Error: </span>
+                <span tw="font-bold">
+                  {e instanceof Error ? e.message : "Unknown error occurred"}
+                </span>
+              </div>
+            </Shell>
           ),
           buttons: [backButton],
         };
@@ -191,10 +257,17 @@ const handleRequest = frames(async (ctx) => {
       return {
         imageOptions,
         image: (
-          <div tw="flex">
-            <span tw="mr-2">🥷 Reported</span>
-            <span tw="font-bold">Thank you for your report!</span>
-          </div>
+          <Shell>
+            <div tw="flex flex-col items-center justify-center h-full">
+              <span tw="text-2xl mb-8 font-semibold tracking-wide uppercase bg-white/10 border border-white/30 px-6 py-2 rounded-full">
+                ✅ Submission Complete
+              </span>
+              <span tw="font-bold mb-4 text-5xl text-center">
+                Successfully created Report CH-{result.id}!
+              </span>
+              <span tw="text-neutral-200">Thank you for your support!</span>
+            </div>
+          </Shell>
         ),
         buttons: [
           backButton,
@@ -209,10 +282,12 @@ const handleRequest = frames(async (ctx) => {
       return {
         imageOptions,
         image: (
-          <div tw="flex">
-            <span tw="mr-2">❌ Error: </span>
-            <span tw="font-bold">{error}</span>
-          </div>
+          <Shell>
+            <div tw="flex items-center justify-center h-full">
+              <span tw="mr-2">❌ Error: </span>
+              <span tw="font-bold">{error}</span>
+            </div>
+          </Shell>
         ),
         buttons: [
           <Button action="post" target={{ query: { op: "" } }}>
@@ -227,17 +302,21 @@ const handleRequest = frames(async (ctx) => {
       return {
         imageOptions,
         image: (
-          <div tw="flex flex-col">
-            <div tw="flex flex-col">
-              <h1 tw="text-2xl font-bold leading-none mb-0">ChainPatrol</h1>
-              <h2 tw="text-5xl font-bold leading-none mt-6">
+          <Shell>
+            <div tw="flex flex-col justify-center h-full">
+              <h1 tw="text-5xl font-bold leading-none mt-6 mb-6 text-white">
                 Threat Detection Tools
-              </h2>
+              </h1>
+              <p tw="mt-0 text-neutral-400 text-3xl leading-relaxed">
+                Use our tools to check if a URL is safe to visit or report a
+                suspicious URL to our team to investigate.
+              </p>
+
+              <span tw="text-neutral-200 text-2xl mt-4">
+                Example: https://scam-site.com
+              </span>
             </div>
-            <div tw="flex">
-              <p tw="mt-0">Enter a URL to check or report:</p>
-            </div>
-          </div>
+          </Shell>
         ),
         textInput: "Type a URL",
         buttons: [
