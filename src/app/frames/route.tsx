@@ -13,16 +13,30 @@ const chainpatrol = new ChainPatrolClient({
   baseUrl: process.env.CHAINPATROL_API_URL,
 });
 
-const regularFont = fetch(
+const interRegularFont = fetch(
   new URL("/public/assets/fonts/inter-latin-400-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
-const semiboldFont = fetch(
+const interSemiboldFont = fetch(
   new URL("/public/assets/fonts/inter-latin-600-normal.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
-const boldFont = fetch(
+const interBoldFont = fetch(
   new URL("/public/assets/fonts/inter-latin-700-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+
+const firaCodeRegularFont = fetch(
+  new URL(
+    "/public/assets/fonts/fira-code-latin-400-normal.ttf",
+    import.meta.url
+  )
+).then((res) => res.arrayBuffer());
+
+const firaCodeBoldFont = fetch(
+  new URL(
+    "/public/assets/fonts/fira-code-latin-700-normal.ttf",
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 const DEFAULT_DEBUGGER_URL =
@@ -38,6 +52,10 @@ const frames = createFrames({
   middleware: [farcasterHubContext({ hubHttpUrl: DEFAULT_DEBUGGER_HUB_URL })],
 });
 
+function trimTrailingSlashes(url: string): string {
+  return url.replace(/\/+$/, "");
+}
+
 type ImageOptions = ConstructorParameters<typeof ImageResponse>[1];
 
 const backButton = (
@@ -46,7 +64,7 @@ const backButton = (
   </Button>
 );
 
-function Shell({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div tw="w-screen h-screen bg-neutral-900 text-white flex flex-col items-center justify-center p-8 pb-4">
       <div tw="flex flex-col bg-neutral-800 p-12 rounded-xl border border-white/30 shadow-lg w-full flex-1 relative">
@@ -94,27 +112,45 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 const handleRequest = frames(async (ctx) => {
-  const [regularFontData, semiboldFontData, boldFontData] = await Promise.all([
-    regularFont,
-    semiboldFont,
-    boldFont,
+  const [
+    interRegularFontData,
+    interSemiboldFontData,
+    interBoldFontData,
+    firaCodeRegularFontData,
+    firaCodeBoldFontData,
+  ] = await Promise.all([
+    interRegularFont,
+    interSemiboldFont,
+    interBoldFont,
+    firaCodeRegularFont,
+    firaCodeBoldFont,
   ]);
 
   const imageOptions = {
     fonts: [
       {
         name: "Inter",
-        data: regularFontData,
+        data: interRegularFontData,
         weight: 400,
       },
       {
         name: "Inter",
-        data: semiboldFontData,
+        data: interSemiboldFontData,
         weight: 600,
       },
       {
         name: "Inter",
-        data: boldFontData,
+        data: interBoldFontData,
+        weight: 700,
+      },
+      {
+        name: "Fira Code",
+        data: firaCodeRegularFontData,
+        weight: 400,
+      },
+      {
+        name: "Fira Code",
+        data: firaCodeBoldFontData,
         weight: 700,
       },
     ],
@@ -123,39 +159,62 @@ const handleRequest = frames(async (ctx) => {
   const { op, content, error } = (() => {
     let op = ctx.searchParams.op;
 
-    const content =
-      ctx.searchParams.content ??
-      (ctx.message?.inputText
-        ? normalizeUrl(ctx.message?.inputText?.trim() ?? "")
-        : "");
+    const content = (() => {
+      try {
+        const url = new URL(
+          ctx.searchParams.content ??
+            (ctx.message?.inputText
+              ? normalizeUrl(ctx.message?.inputText?.trim() ?? "")
+              : "")
+        );
+        return url.toString();
+      } catch (e) {
+        return null;
+      }
+    })();
 
     const error = (() => {
       if (!op || op === "initial") {
         return null;
       }
 
+      if (content === null) {
+        return "Invalid URL";
+      }
+
       if (content === "") {
         return "Empty URL";
       }
-
-      try {
-        new URL(content);
-        return null;
-      } catch (e) {
-        if (e instanceof TypeError) {
-          return "Invalid URL";
-        } else {
-          return "Unknown error";
-        }
-      }
     })();
-
-    if (error) {
-      op = "error";
-    }
 
     return { op, content, error };
   })();
+
+  if (error) {
+    return {
+      imageOptions,
+      image: (
+        <Layout>
+          <div
+            tw="flex flex-col h-full mt-8"
+            style={{ fontFamily: "'Fira Code', monospace" }}
+          >
+            <div tw="flex mt-2 mb-4">
+              <span tw="text-2xl mr-4">$ </span>
+              <span tw="text-2xl mr-3">chainpatrol {op}</span>
+              <span tw="text-2xl text-purple-300">$INPUT</span>
+            </div>
+
+            <div tw="flex text-neutral-400">
+              <span tw="text-2xl mr-2">Error:</span>
+              <span tw="text-2xl text-red-300">&quot;{error}&quot;</span>
+            </div>
+          </div>
+        </Layout>
+      ),
+      buttons: [backButton],
+    };
+  }
 
   switch (op) {
     case "check": {
@@ -167,40 +226,60 @@ const handleRequest = frames(async (ctx) => {
         return {
           imageOptions,
           image: (
-            <Shell>
-              <div tw="flex flex-col items-center justify-center h-full">
+            <Layout>
+              <div
+                tw="flex flex-col h-full mt-8"
+                style={{ fontFamily: "'Fira Code', monospace" }}
+              >
+                <div tw="flex mt-2 mb-4">
+                  <span tw="text-2xl mr-4">$ </span>
+                  <span tw="text-2xl mr-3">chainpatrol check</span>
+                  <span tw="text-2xl text-purple-300">$INPUT</span>
+                </div>
+
+                <div tw="flex mt-2">
+                  <span tw="text-2xl mr-2">URL: </span>
+                  <span tw="text-2xl font-bold">{content}</span>
+                </div>
+
                 {result.status === "ALLOWED" && (
-                  <div tw="flex">
-                    <span tw="mr-2">✅ Allowed</span>
+                  <div tw="flex items-center">
+                    <span tw="text-2xl mr-2">Status:</span>
+                    <span tw="text-2xl bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                      ALLOWED
+                    </span>
                   </div>
                 )}
 
                 {result.status === "BLOCKED" && (
-                  <div tw="flex">
-                    <span tw="mr-2">🚫 Blocked</span>
+                  <div tw="flex items-center">
+                    <span tw="text-2xl mr-2">Status:</span>
+                    <span tw="text-2xl bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                      BLOCKED
+                    </span>
                   </div>
                 )}
 
                 {(result.status === "UNKNOWN" ||
                   result.status === "IGNORED") && (
-                  <div tw="flex">
-                    <span tw="mr-2">❓ Unknown</span>
+                  <div tw="flex items-center">
+                    <span tw="text-2xl mr-2">Status:</span>
+                    <span tw="text-2xl bg-neutral-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                      UNKNOWN
+                    </span>
                   </div>
                 )}
-
-                <div tw="flex mt-2">
-                  <span tw="mr-2">🔗 URL: </span>
-                  <span tw="font-bold">{content}</span>
-                </div>
               </div>
-            </Shell>
+            </Layout>
           ),
           buttons: [
             backButton,
             (result.status === "ALLOWED" || result.status === "BLOCKED") && (
               <Button
                 action="link"
-                target={`${process.env.CHAINPATROL_APP_URL}/search?content=${result.url}`}
+                target={`${trimTrailingSlashes(
+                  process.env.CHAINPATROL_APP_URL!
+                )}/search?content=${content}`}
               >
                 Details
               </Button>
@@ -219,14 +298,14 @@ const handleRequest = frames(async (ctx) => {
         return {
           imageOptions,
           image: (
-            <Shell>
+            <Layout>
               <div tw="flex justify-center items-center h-full">
                 <span tw="mr-2">❌ Error: </span>
                 <span tw="font-bold">
                   {e instanceof Error ? e.message : "Unknown error occurred"}
                 </span>
               </div>
-            </Shell>
+            </Layout>
           ),
           buttons: [backButton],
         };
@@ -234,40 +313,90 @@ const handleRequest = frames(async (ctx) => {
     }
 
     case "report": {
+      const title = `Farcaster frame report: ${content}`;
+      const description = `This report was created from the ChainPatrol Farcaster frame. The user reported the following URL: ${content}`;
+      const assets = [
+        {
+          content,
+          status: "BLOCKED",
+        },
+      ];
+      const reporter = ctx.message?.requesterUserData && {
+        platform: "farcaster",
+        platformIdentifier: ctx.message.requesterUserData.username,
+        displayName: ctx.message.requesterUserData.displayName,
+        avatarUrl: ctx.message.requesterUserData.profileImage,
+      };
+
       const result = await chainpatrol.report.create({
         organizationSlug: "chainpatrol",
-        title: `Farcaster frame report: ${content}`,
-        description: `This report was created from the ChainPatrol Farcaster frame. The user reported the following URL: ${content}`,
-        externalReporter: ctx.message?.requesterUserData && {
-          platform: "farcaster",
-          platformIdentifier: ctx.message.requesterUserData.username,
-          displayName: ctx.message.requesterUserData.displayName,
-          avatarUrl: ctx.message.requesterUserData.profileImage,
-        },
-        assets: [
-          {
-            content,
-            status: "BLOCKED",
-          },
-        ],
+        title,
+        description,
+        externalReporter: reporter,
+        assets,
       });
 
-      const reportUrl = `${process.env.CHAINPATROL_APP_URL}/reports/${result.id}`;
+      const reportUrl = `${trimTrailingSlashes(
+        process.env.CHAINPATROL_APP_URL!
+      )}/reports/${result.id}`;
 
       return {
         imageOptions,
         image: (
-          <Shell>
-            <div tw="flex flex-col items-center justify-center h-full">
-              <span tw="text-2xl mb-8 font-semibold tracking-wide uppercase bg-white/10 border border-white/30 px-6 py-2 rounded-full">
-                ✅ Submission Complete
+          <Layout>
+            <div
+              tw="flex flex-col h-full mt-8"
+              style={{ fontFamily: "'Fira Code', monospace" }}
+            >
+              <div tw="flex mt-2 mb-4">
+                <span tw="text-2xl mr-4">$ </span>
+                <span tw="text-2xl mr-3">chainpatrol report</span>
+                <span tw="text-2xl text-purple-300">$INPUT</span>
+              </div>
+
+              <span tw="text-2xl font-bold mb-8">
+                ✅ Successfully created report CH-{result.id}!
               </span>
-              <span tw="font-bold mb-4 text-5xl text-center">
-                Successfully created Report CH-{result.id}!
-              </span>
-              <span tw="text-neutral-200">Thank you for your support!</span>
+
+              <div tw="flex text-neutral-400">
+                <span tw="text-2xl mr-2">Title:</span>
+                <span tw="text-2xl text-lime-200">&quot;{title}&quot;</span>
+              </div>
+              {reporter && (
+                <div tw="flex text-neutral-400">
+                  <span tw="text-2xl mr-2">Reporter:</span>
+                  <span tw="text-2xl text-lime-200">
+                    &quot;{reporter.displayName} (@{reporter.platformIdentifier}
+                    )&quot;
+                  </span>
+                </div>
+              )}
+              <div tw="flex flex-col text-neutral-400 mb-8 mt-8">
+                <span tw="text-2xl">
+                  {assets.map((a) => (
+                    <>
+                      {a.status === "ALLOWED" && (
+                        <span tw="text-2xl mr-3 bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                          ALLOW
+                        </span>
+                      )}
+                      {a.status === "BLOCKED" && (
+                        <span tw="text-2xl mr-3 bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                          BLOCK
+                        </span>
+                      )}
+                      <span tw="text-2xl">{a.content}</span>
+                    </>
+                  ))}
+                </span>
+              </div>
+
+              <div tw="flex text-neutral-400">
+                <span tw="text-2xl mr-4">Report URL:</span>
+                <span tw="text-2xl text-blue-300 underline">{reportUrl}</span>
+              </div>
             </div>
-          </Shell>
+          </Layout>
         ),
         buttons: [
           backButton,
@@ -278,36 +407,25 @@ const handleRequest = frames(async (ctx) => {
       };
     }
 
-    case "error": {
-      return {
-        imageOptions,
-        image: (
-          <Shell>
-            <div tw="flex items-center justify-center h-full">
-              <span tw="mr-2">❌ Error: </span>
-              <span tw="font-bold">{error}</span>
-            </div>
-          </Shell>
-        ),
-        buttons: [
-          <Button action="post" target={{ query: { op: "" } }}>
-            🔄 Retry
-          </Button>,
-        ],
-      };
-    }
-
     case "initial":
     default: {
       return {
         imageOptions,
         image: (
-          <Shell>
-            <div tw="flex flex-col justify-center h-full">
-              <h1 tw="text-5xl font-bold leading-none mt-6 mb-6 text-white">
+          <Layout>
+            <div
+              tw="flex flex-col justify-center h-full"
+              style={{ fontFamily: "'Fira Code', monospace" }}
+            >
+              <div tw="flex mt-2 mb-4">
+                <span tw="text-2xl mr-4">$ </span>
+                <span tw="text-2xl mr-3">chainpatrol --help</span>
+              </div>
+
+              <h1 tw="text-2xl font-bold leading-none mt-6 mb-6 text-white">
                 Threat Detection Tools
               </h1>
-              <p tw="mt-0 text-neutral-400 text-3xl leading-relaxed">
+              <p tw="mt-0 text-neutral-400 text-2xl leading-relaxed">
                 Use our tools to check if a URL is safe to visit or report a
                 suspicious URL to our team to investigate.
               </p>
@@ -316,7 +434,7 @@ const handleRequest = frames(async (ctx) => {
                 Example: https://scam-site.com
               </span>
             </div>
-          </Shell>
+          </Layout>
         ),
         textInput: "Type a URL",
         buttons: [
