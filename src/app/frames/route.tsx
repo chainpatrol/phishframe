@@ -5,8 +5,9 @@ import { farcasterHubContext } from "frames.js/middleware";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
-import { fileURLToPath } from "url";
-import { readFile } from "fs/promises";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
@@ -15,19 +16,30 @@ const chainpatrol = new ChainPatrolClient({
   baseUrl: process.env.CHAINPATROL_API_URL,
 });
 
-async function loadFont(file: string) {
-  const url = new URL(`../../../fonts/${file}`, import.meta.url);
-  const filepath = fileURLToPath(url);
-  console.log({ file, url: url.toString(), filepath });
-  // const res = await fetch(url);
-  // return res.arrayBuffer();
-  return readFile(filepath);
-}
-
-const interRegularFont = loadFont("inter-latin-400-normal.ttf");
-const interBoldFont = loadFont("inter-latin-700-normal.ttf");
-const firaCodeRegularFont = loadFont("fira-code-latin-400-normal.ttf");
-const firaCodeBoldFont = loadFont("fira-code-latin-700-normal.ttf");
+const interRegularFont = fs.readFile(
+  path.join(
+    fileURLToPath(import.meta.url),
+    "../../../../assets/fonts/inter-latin-400-normal.ttf"
+  )
+);
+const interBoldFont = fs.readFile(
+  path.join(
+    fileURLToPath(import.meta.url),
+    "../../../../assets/fonts/inter-latin-700-normal.ttf"
+  )
+);
+const firaCodeRegularFont = fs.readFile(
+  path.join(
+    fileURLToPath(import.meta.url),
+    "../../../../assets/fonts/fira-code-latin-400-normal.ttf"
+  )
+);
+const firaCodeBoldFont = fs.readFile(
+  path.join(
+    fileURLToPath(import.meta.url),
+    "../../../../assets/fonts/fira-code-latin-700-normal.ttf"
+  )
+);
 
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
@@ -89,7 +101,7 @@ function Layout({ children }: { children: React.ReactNode }) {
               (process.env.RAILWAY_PUBLIC_DOMAIN &&
                 `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`) ??
               "http://localhost:3001"
-            }/assets/images/logo.svg`}
+            }/images/logo.svg`}
             alt="ChainPatrol Logo"
             tw="w-12 h-12"
           />
