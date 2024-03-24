@@ -5,6 +5,8 @@ import { farcasterHubContext } from "frames.js/middleware";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
+import { fileURLToPath } from "url";
+import { readFile } from "fs/promises";
 
 export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
@@ -14,16 +16,17 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 async function loadFont(file: string) {
-  const res = await fetch(
-    new URL(`../../../public/assets/fonts/${file}`, import.meta.url)
-  );
-  return res.arrayBuffer();
+  const url = new URL(`../../../public/assets/fonts/${file}`, import.meta.url);
+  const filepath = fileURLToPath(url);
+  // const res = await fetch(url);
+  // return res.arrayBuffer();
+  return readFile(filepath);
 }
 
-// const interRegularFont = loadFont("inter-latin-400-normal.ttf");
-// const interBoldFont = loadFont("inter-latin-700-normal.ttf");
-// const firaCodeRegularFont = loadFont("fira-code-latin-400-normal.ttf");
-// const firaCodeBoldFont = loadFont("fira-code-latin-700-normal.ttf");
+const interRegularFont = loadFont("inter-latin-400-normal.ttf");
+const interBoldFont = loadFont("inter-latin-700-normal.ttf");
+const firaCodeRegularFont = loadFont("fira-code-latin-400-normal.ttf");
+const firaCodeBoldFont = loadFont("fira-code-latin-700-normal.ttf");
 
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
@@ -155,41 +158,41 @@ function Status({
 }
 
 const handleRequest = frames(async (ctx) => {
-  // const [
-  //   interRegularFontData,
-  //   interBoldFontData,
-  //   firaCodeRegularFontData,
-  //   firaCodeBoldFontData,
-  // ] = await Promise.all([
-  //   interRegularFont,
-  //   interBoldFont,
-  //   firaCodeRegularFont,
-  //   firaCodeBoldFont,
-  // ]);
+  const [
+    interRegularFontData,
+    interBoldFontData,
+    firaCodeRegularFontData,
+    firaCodeBoldFontData,
+  ] = await Promise.all([
+    interRegularFont,
+    interBoldFont,
+    firaCodeRegularFont,
+    firaCodeBoldFont,
+  ]);
 
   const imageOptions = {
-    // fonts: [
-    //   {
-    //     name: "Inter",
-    //     data: interRegularFontData,
-    //     weight: 400,
-    //   },
-    //   {
-    //     name: "Inter",
-    //     data: interBoldFontData,
-    //     weight: 700,
-    //   },
-    //   {
-    //     name: "Fira Code",
-    //     data: firaCodeRegularFontData,
-    //     weight: 400,
-    //   },
-    //   {
-    //     name: "Fira Code",
-    //     data: firaCodeBoldFontData,
-    //     weight: 700,
-    //   },
-    // ],
+    fonts: [
+      {
+        name: "Inter",
+        data: interRegularFontData,
+        weight: 400,
+      },
+      {
+        name: "Inter",
+        data: interBoldFontData,
+        weight: 700,
+      },
+      {
+        name: "Fira Code",
+        data: firaCodeRegularFontData,
+        weight: 400,
+      },
+      {
+        name: "Fira Code",
+        data: firaCodeBoldFontData,
+        weight: 700,
+      },
+    ],
   } satisfies ImageOptions;
 
   const { op, content, error } = (() => {
