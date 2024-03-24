@@ -16,7 +16,7 @@ const chainpatrol = new ChainPatrolClient({
 });
 
 async function loadFont(file: string) {
-  const url = new URL(`../../../public/assets/fonts/${file}`, import.meta.url);
+  const url = new URL(`../../../assets/fonts/${file}`, import.meta.url);
   const filepath = fileURLToPath(url);
   // const res = await fetch(url);
   // return res.arrayBuffer();
