@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import { createFrames, Button } from "frames.js/next";
+import { farcasterHubContext } from "frames.js/middleware";
 // import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
-import { farcasterHubContext } from "frames.js/middleware";
-import normalizeUrl from "normalize-url";
+// import normalizeUrl from "normalize-url";
 
 export const runtime = "edge";
 
@@ -160,9 +160,7 @@ const handleRequest = frames(async (ctx) => {
       try {
         const url = new URL(
           ctx.searchParams.content ??
-            (ctx.message?.inputText
-              ? normalizeUrl(ctx.message?.inputText?.trim() ?? "")
-              : "")
+            (ctx.message?.inputText ? ctx.message?.inputText?.trim() ?? "" : "")
         );
         return url.toString();
       } catch (e) {
