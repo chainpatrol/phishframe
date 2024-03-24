@@ -161,6 +161,7 @@ const handleRequest = frames(async (ctx) => {
               ? normalizeUrl(ctx.message?.inputText?.trim()) ?? ""
               : "")
         );
+
         return url.toString();
       } catch (e) {
         return null;
@@ -185,6 +186,7 @@ const handleRequest = frames(async (ctx) => {
   })();
 
   if (error) {
+    console.error(error);
     return {
       imageOptions,
       image: (
@@ -289,6 +291,7 @@ const handleRequest = frames(async (ctx) => {
           ],
         };
       } catch (e) {
+        console.error(e);
         return {
           imageOptions,
           image: (
