@@ -34,12 +34,12 @@ const firaCodeRegularFont = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
-const firaCodeBoldFont = fetch(
-  new URL(
-    "../../../public/assets/fonts/fira-code-latin-700-normal.ttf",
-    import.meta.url
-  )
-).then((res) => res.arrayBuffer());
+// const firaCodeBoldFont = fetch(
+//   new URL(
+//     "../../../public/assets/fonts/fira-code-latin-700-normal.ttf",
+//     import.meta.url
+//   )
+// ).then((res) => res.arrayBuffer());
 
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
@@ -120,12 +120,12 @@ const handleRequest = frames(async (ctx) => {
     interRegularFontData,
     // interBoldFontData,
     firaCodeRegularFontData,
-    firaCodeBoldFontData,
+    // firaCodeBoldFontData,
   ] = await Promise.all([
     interRegularFont,
     // interBoldFont,
     firaCodeRegularFont,
-    firaCodeBoldFont,
+    // firaCodeBoldFont,
   ]);
 
   const imageOptions = {
@@ -145,11 +145,11 @@ const handleRequest = frames(async (ctx) => {
         data: firaCodeRegularFontData,
         weight: 400,
       },
-      {
-        name: "Fira Code",
-        data: firaCodeBoldFontData,
-        weight: 700,
-      },
+      // {
+      //   name: "Fira Code",
+      //   data: firaCodeBoldFontData,
+      //   weight: 700,
+      // },
     ],
   } satisfies ImageOptions;
 
