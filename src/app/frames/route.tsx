@@ -5,9 +5,6 @@ import { farcasterHubContext } from "frames.js/middleware";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
-// import fs from "fs/promises";
-// import path from "path";
-// import { fileURLToPath } from "url";
 
 export const runtime = "edge"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
@@ -21,19 +18,12 @@ async function loadFont(file: string) {
     new URL(`../../../public/assets/fonts/${file}`, import.meta.url)
   );
   return res.arrayBuffer();
-  // return fs.readFile(
-  //   path.join(
-  //     fileURLToPath(import.meta.url),
-  //     "../../../../public/assets/fonts/",
-  //     file
-  //   )
-  // );
 }
 
-const interRegularFont = loadFont("inter-latin-400-normal.ttf");
-const interBoldFont = loadFont("inter-latin-700-normal.ttf");
-const firaCodeRegularFont = loadFont("fira-code-latin-400-normal.ttf");
-const firaCodeBoldFont = loadFont("fira-code-latin-700-normal.ttf");
+// const interRegularFont = loadFont("inter-latin-400-normal.ttf");
+// const interBoldFont = loadFont("inter-latin-700-normal.ttf");
+// const firaCodeRegularFont = loadFont("fira-code-latin-400-normal.ttf");
+// const firaCodeBoldFont = loadFont("fira-code-latin-700-normal.ttf");
 
 const DEFAULT_DEBUGGER_URL =
   process.env.DEBUGGER_URL ?? "http://localhost:3010/";
@@ -113,41 +103,41 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 const handleRequest = frames(async (ctx) => {
-  const [
-    interRegularFontData,
-    interBoldFontData,
-    firaCodeRegularFontData,
-    firaCodeBoldFontData,
-  ] = await Promise.all([
-    interRegularFont,
-    interBoldFont,
-    firaCodeRegularFont,
-    firaCodeBoldFont,
-  ]);
+  // const [
+  //   interRegularFontData,
+  //   interBoldFontData,
+  //   firaCodeRegularFontData,
+  //   firaCodeBoldFontData,
+  // ] = await Promise.all([
+  //   interRegularFont,
+  //   interBoldFont,
+  //   firaCodeRegularFont,
+  //   firaCodeBoldFont,
+  // ]);
 
   const imageOptions = {
-    fonts: [
-      {
-        name: "Inter",
-        data: interRegularFontData,
-        weight: 400,
-      },
-      {
-        name: "Inter",
-        data: interBoldFontData,
-        weight: 700,
-      },
-      {
-        name: "Fira Code",
-        data: firaCodeRegularFontData,
-        weight: 400,
-      },
-      {
-        name: "Fira Code",
-        data: firaCodeBoldFontData,
-        weight: 700,
-      },
-    ],
+    // fonts: [
+    //   {
+    //     name: "Inter",
+    //     data: interRegularFontData,
+    //     weight: 400,
+    //   },
+    //   {
+    //     name: "Inter",
+    //     data: interBoldFontData,
+    //     weight: 700,
+    //   },
+    //   {
+    //     name: "Fira Code",
+    //     data: firaCodeRegularFontData,
+    //     weight: 400,
+    //   },
+    //   {
+    //     name: "Fira Code",
+    //     data: firaCodeBoldFontData,
+    //     weight: 700,
+    //   },
+    // ],
   } satisfies ImageOptions;
 
   const { op, content, error } = (() => {
@@ -192,18 +182,18 @@ const handleRequest = frames(async (ctx) => {
       image: (
         <Layout>
           <div
-            tw="flex flex-col h-full mt-8"
+            tw="flex flex-col h-full mt-8 text-2xl"
             style={{ fontFamily: "'Fira Code', monospace" }}
           >
             <div tw="flex mt-2 mb-4">
-              <span tw="text-2xl mr-4">$ </span>
-              <span tw="text-2xl mr-3">phishframe {op}</span>
-              <span tw="text-2xl text-purple-300">$INPUT</span>
+              <span tw="mr-4">$ </span>
+              <span tw="mr-3">phishframe {op}</span>
+              <span tw="text-purple-300">$INPUT</span>
             </div>
 
             <div tw="flex text-neutral-400">
-              <span tw="text-2xl mr-2">Error:</span>
-              <span tw="text-2xl text-red-300">&quot;{error}&quot;</span>
+              <span tw="mr-2">Error:</span>
+              <span tw="text-red-300">&quot;{error}&quot;</span>
             </div>
           </div>
         </Layout>
@@ -224,24 +214,24 @@ const handleRequest = frames(async (ctx) => {
           image: (
             <Layout>
               <div
-                tw="flex flex-col h-full mt-8"
+                tw="flex flex-col h-full mt-8 text-2xl"
                 style={{ fontFamily: "'Fira Code', monospace" }}
               >
                 <div tw="flex mt-2 mb-4">
-                  <span tw="text-2xl mr-4">$ </span>
-                  <span tw="text-2xl mr-3">phishframe check</span>
-                  <span tw="text-2xl text-purple-300">$INPUT</span>
+                  <span tw="mr-4">$ </span>
+                  <span tw="mr-3">phishframe check</span>
+                  <span tw="text-purple-300">$INPUT</span>
                 </div>
 
                 <div tw="flex mt-2">
-                  <span tw="text-2xl mr-2">URL: </span>
-                  <span tw="text-2xl font-bold">{content}</span>
+                  <span tw="mr-2">URL: </span>
+                  <span tw="font-bold">{content}</span>
                 </div>
 
                 {result.status === "ALLOWED" && (
                   <div tw="flex items-center">
-                    <span tw="text-2xl mr-2">Status:</span>
-                    <span tw="text-2xl bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                    <span tw="mr-2">Status:</span>
+                    <span tw="bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
                       ALLOWED
                     </span>
                   </div>
@@ -249,8 +239,8 @@ const handleRequest = frames(async (ctx) => {
 
                 {result.status === "BLOCKED" && (
                   <div tw="flex items-center">
-                    <span tw="text-2xl mr-2">Status:</span>
-                    <span tw="text-2xl bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                    <span tw="mr-2">Status:</span>
+                    <span tw="bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
                       BLOCKED
                     </span>
                   </div>
@@ -259,8 +249,8 @@ const handleRequest = frames(async (ctx) => {
                 {(result.status === "UNKNOWN" ||
                   result.status === "IGNORED") && (
                   <div tw="flex items-center">
-                    <span tw="text-2xl mr-2">Status:</span>
-                    <span tw="text-2xl bg-neutral-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                    <span tw="mr-2">Status:</span>
+                    <span tw="bg-neutral-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
                       UNKNOWN
                     </span>
                   </div>
@@ -342,55 +332,55 @@ const handleRequest = frames(async (ctx) => {
         image: (
           <Layout>
             <div
-              tw="flex flex-col h-full mt-8"
+              tw="flex flex-col h-full mt-8 text-2xl"
               style={{ fontFamily: "'Fira Code', monospace" }}
             >
               <div tw="flex mt-2 mb-4">
-                <span tw="text-2xl mr-4">$ </span>
-                <span tw="text-2xl mr-3">phishframe report</span>
-                <span tw="text-2xl text-purple-300">$INPUT</span>
+                <span tw="mr-4">$ </span>
+                <span tw="mr-3">phishframe report</span>
+                <span tw="text-purple-300">$INPUT</span>
               </div>
 
-              <span tw="text-2xl font-bold mb-8">
+              <span tw="font-bold mb-8">
                 ✅ Successfully created report CH-{result.id}!
               </span>
 
               <div tw="flex text-neutral-400">
-                <span tw="text-2xl mr-2">Title:</span>
-                <span tw="text-2xl text-lime-200">&quot;{title}&quot;</span>
+                <span tw="mr-2">Title:</span>
+                <span tw="text-lime-200">&quot;{title}&quot;</span>
               </div>
               {reporter && (
                 <div tw="flex text-neutral-400">
-                  <span tw="text-2xl mr-2">Reporter:</span>
-                  <span tw="text-2xl text-lime-200">
+                  <span tw="mr-2">Reporter:</span>
+                  <span tw="text-lime-200">
                     &quot;{reporter.displayName} (@{reporter.platformIdentifier}
                     )&quot;
                   </span>
                 </div>
               )}
               <div tw="flex flex-col text-neutral-400 mb-8 mt-8">
-                <span tw="text-2xl">
+                <span>
                   {assets.map((a) => (
                     <>
                       {a.status === "ALLOWED" && (
-                        <span tw="text-2xl mr-3 bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                        <span tw="mr-3 bg-green-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
                           ALLOW
                         </span>
                       )}
                       {a.status === "BLOCKED" && (
-                        <span tw="text-2xl mr-3 bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
+                        <span tw="mr-3 bg-red-300 text-neutral-800 px-2 py-0.5 leading-none font-bold">
                           BLOCK
                         </span>
                       )}
-                      <span tw="text-2xl">{a.content}</span>
+                      <span>{a.content}</span>
                     </>
                   ))}
                 </span>
               </div>
 
               <div tw="flex text-neutral-400">
-                <span tw="text-2xl mr-4">Report URL:</span>
-                <span tw="text-2xl text-blue-300 underline">{reportUrl}</span>
+                <span tw="mr-4">Report URL:</span>
+                <span tw="text-blue-300 underline">{reportUrl}</span>
               </div>
             </div>
           </Layout>
@@ -411,23 +401,23 @@ const handleRequest = frames(async (ctx) => {
         image: (
           <Layout>
             <div
-              tw="flex flex-col justify-center h-full"
+              tw="flex flex-col justify-center h-full text-2xl"
               style={{ fontFamily: "'Fira Code', monospace" }}
             >
               <div tw="flex mt-2 mb-4">
-                <span tw="text-2xl mr-4">$ </span>
-                <span tw="text-2xl mr-3">phishframe --help</span>
+                <span tw="mr-4">$ </span>
+                <span tw="mr-3">phishframe --help</span>
               </div>
 
-              <h1 tw="text-2xl font-bold leading-none mt-6 mb-6 text-white">
+              <h1 tw="font-bold leading-none mt-6 mb-6 text-white">
                 PhishFrame
               </h1>
-              <p tw="mt-0 text-neutral-400 text-2xl leading-relaxed">
+              <p tw="mt-0 text-neutral-400 leading-relaxed">
                 Type a valid URL below and click &quot;Check&quot; to see if
                 it&apos;s safe or &quot;Report&quot; to report a phishing site.
               </p>
 
-              <span tw="text-neutral-200 text-2xl mt-4">
+              <span tw="text-neutral-200 mt-4">
                 Example: https://scam-site.com
               </span>
             </div>
