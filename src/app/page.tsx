@@ -1,8 +1,9 @@
 import Image from "next/image";
 
 import { fetchMetadata } from "frames.js/next";
+import type { Metadata } from "next";
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Frames",
     // provide a full URL to your /frames endpoint

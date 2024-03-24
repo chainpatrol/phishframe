@@ -1,17 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import { createFrames, Button } from "frames.js/next";
-import { ChainPatrolClient } from "@chainpatrol/sdk";
+// import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import { farcasterHubContext } from "frames.js/middleware";
 import normalizeUrl from "normalize-url";
 
 export const runtime = "edge";
 
-const chainpatrol = new ChainPatrolClient({
-  apiKey: process.env.CHAINPATROL_API_KEY!,
-  baseUrl: process.env.CHAINPATROL_API_URL,
-});
+// const chainpatrol = new ChainPatrolClient({
+//   apiKey: process.env.CHAINPATROL_API_KEY!,
+//   baseUrl: process.env.CHAINPATROL_API_URL,
+// });
 
 const interRegularFont = fetch(
   new URL(
@@ -216,9 +216,12 @@ const handleRequest = frames(async (ctx) => {
   switch (op) {
     case "check": {
       try {
-        const result = await chainpatrol.asset.check({
-          content,
-        });
+        // const result = await chainpatrol.asset.check({
+        //   content,
+        // });
+        const result = {
+          status: "ALLOWED",
+        };
 
         return {
           imageOptions,
@@ -325,13 +328,17 @@ const handleRequest = frames(async (ctx) => {
         avatarUrl: ctx.message.requesterUserData.profileImage,
       };
 
-      const result = await chainpatrol.report.create({
-        organizationSlug: "phishframe",
-        title,
-        description,
-        externalReporter: reporter,
-        assets,
-      });
+      // const result = await chainpatrol.report.create({
+      //   organizationSlug: "phishframe",
+      //   title,
+      //   description,
+      //   externalReporter: reporter,
+      //   assets,
+      // });
+
+      const result = {
+        id: 123,
+      };
 
       const reportUrl = `${trimTrailingSlashes(
         process.env.CHAINPATROL_APP_URL!
