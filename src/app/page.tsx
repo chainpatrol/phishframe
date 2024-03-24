@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { fetchMetadata } from "frames.js/next";
 import type { Metadata } from "next";
+import { Bolt, CodeSquare, Github } from "lucide-react";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -23,6 +24,44 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 p-8 md:p-24">
+      <nav className="w-full max-w-3xl">
+        <ul className="flex justify-center gap-8">
+          <li>
+            <a
+              href="https://ethglobal.com/showcase/phishframe-5ihsk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex gap-2 items-center text-sm font-semibold tracking-tight hover:underline underline-offset-4 text-neutral-800 dark:text-neutral-400 hover:text-teal-600"
+            >
+              <CodeSquare size={16} />
+              EthGlobal Showcase
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/chainpatrol/phishframe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex gap-2 items-center text-sm font-semibold tracking-tight hover:underline underline-offset-4 text-neutral-800 dark:text-neutral-400 hover:text-teal-600"
+            >
+              <Github size={16} />
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://chainpatrol.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex gap-2 items-center text-sm font-semibold tracking-tight hover:underline underline-offset-4 text-neutral-800 dark:text-neutral-400 hover:text-teal-600"
+            >
+              <Bolt size={16} />
+              Try it out!
+            </a>
+          </li>
+        </ul>
+      </nav>
+
       <div className="flex flex-col items-center gap-3">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
           PhishFrame
