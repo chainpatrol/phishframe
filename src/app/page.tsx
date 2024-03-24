@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Frames",
+    title: "PhishFrame",
     // provide a full URL to your /frames endpoint
     other: await fetchMetadata(
       new URL(
