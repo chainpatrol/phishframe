@@ -4,8 +4,6 @@ import { fetchMetadata } from "frames.js/next";
 import type { Metadata } from "next";
 import { Bolt, CodeSquare, Github } from "lucide-react";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "PhishFrame",
@@ -13,11 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     other: await fetchMetadata(
       new URL(
         "/frames",
-        process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.RAILWAY_PUBLIC_DOMAIN
-          ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
-          : "http://localhost:3001"
+        process.env.NEXT_PUBLIC_HOST ?? "http://localhost:3001"
       )
     ),
   };
