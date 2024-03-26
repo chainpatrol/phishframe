@@ -79,11 +79,6 @@ const handleRequest = frames(async ({ searchParams, message }) => {
               <span tw="text-purple-300">$INPUT</span>
             </div>
 
-            <div tw="flex mt-2">
-              <span tw="mr-2">URL: </span>
-              <span tw="font-bold">{content}</span>
-            </div>
-
             {result.status === "ALLOWED" && (
               <div tw="flex items-center">
                 <span tw="mr-2">Status:</span>
@@ -122,7 +117,13 @@ const handleRequest = frames(async ({ searchParams, message }) => {
           </Button>
         ),
         result.status === "UNKNOWN" && (
-          <Button action="post" target="/report">
+          <Button
+            action="post"
+            target={{
+              pathname: "/report",
+              query: { content },
+            }}
+          >
             🥷 Report
           </Button>
         ),

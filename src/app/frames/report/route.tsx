@@ -102,42 +102,12 @@ const handleRequest = frames(async ({ searchParams, message }) => {
               <span tw="text-purple-300">$INPUT</span>
             </div>
 
-            <span tw="font-bold mb-8">
-              ✅ Successfully created report CH-{result.id}!
-            </span>
+            <span tw="font-bold mb-8">✅ Successfully created report!</span>
 
             <div tw="flex text-neutral-400">
-              <span tw="mr-2">Title:</span>
-              <span tw="text-lime-200">&quot;{title}&quot;</span>
-            </div>
-            {reporter && (
-              <div tw="flex text-neutral-400">
-                <span tw="mr-2">Reporter:</span>
-                <span tw="text-lime-200">
-                  &quot;{reporter.displayName} (@{reporter.platformIdentifier}
-                  )&quot;
-                </span>
-              </div>
-            )}
-            <div tw="flex flex-col text-neutral-400 mb-8 mt-8">
-              <span>
-                {assets.map((a) => (
-                  <>
-                    {a.status === "ALLOWED" && (
-                      <Status status="ALLOWED" label="Allow" />
-                    )}
-                    {a.status === "BLOCKED" && (
-                      <Status status="BLOCKED" label="Block" />
-                    )}
-                    <span tw="ml-3">{a.content}</span>
-                  </>
-                ))}
+              <span tw="mr-2">
+                Click &apos;View Report&apos; below to see details
               </span>
-            </div>
-
-            <div tw="flex text-neutral-400">
-              <span tw="mr-4">Report URL:</span>
-              <span tw="text-blue-300 underline">{reportUrl}</span>
             </div>
           </div>
         </Layout>
