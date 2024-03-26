@@ -5,10 +5,10 @@ import { farcasterHubContext } from "frames.js/middleware";
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 import type { ImageResponse } from "@vercel/og";
 import normalizeUrl from "normalize-url";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
+// import * as fs from "node:fs/promises";
+// import * as path from "node:path";
 
-export const runtime = "nodejs"; // TODO: figure out why bundle size is so large with 'edge' runtime
+export const runtime = "edge"; // TODO: figure out why bundle size is so large with 'edge' runtime
 
 const chainpatrol = new ChainPatrolClient({
   apiKey: process.env.CHAINPATROL_API_KEY!,
@@ -144,30 +144,43 @@ function Status({
   );
 }
 
-const interRegularFont = fs.readFile(
-  path.join(
-    path.resolve(process.cwd(), "public", "fonts"),
-    "inter-latin-400-normal.ttf"
-  )
-);
-const interBoldFont = fs.readFile(
-  path.join(
-    path.resolve(process.cwd(), "public", "fonts"),
-    "inter-latin-700-normal.ttf"
-  )
-);
-const firaCodeRegularFont = fs.readFile(
-  path.join(
-    path.resolve(process.cwd(), "public", "fonts"),
-    "fira-code-latin-400-normal.ttf"
-  )
-);
-const firaCodeBoldFont = fs.readFile(
-  path.join(
-    path.resolve(process.cwd(), "public", "fonts"),
-    "fira-code-latin-700-normal.ttf"
-  )
-);
+// const interRegularFont = fs.readFile(
+//   path.join(
+//     path.resolve(process.cwd(), "public", "fonts"),
+//     "inter-latin-400-normal.ttf"
+//   )
+// );
+// const interBoldFont = fs.readFile(
+//   path.join(
+//     path.resolve(process.cwd(), "public", "fonts"),
+//     "inter-latin-700-normal.ttf"
+//   )
+// );
+// const firaCodeRegularFont = fs.readFile(
+//   path.join(
+//     path.resolve(process.cwd(), "public", "fonts"),
+//     "fira-code-latin-400-normal.ttf"
+//   )
+// );
+// const firaCodeBoldFont = fs.readFile(
+//   path.join(
+//     path.resolve(process.cwd(), "public", "fonts"),
+//     "fira-code-latin-700-normal.ttf"
+//   )
+// );
+
+const interRegularFont = fetch(
+  new URL("/public/fonts/inter-latin-400-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+const interBoldFont = fetch(
+  new URL("/public/fonts/inter-latin-700-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+const firaCodeRegularFont = fetch(
+  new URL("/public/fonts/fira-code-latin-400-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+const firaCodeBoldFont = fetch(
+  new URL("/public/fonts/fira-code-latin-700-normal.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
 
 const handleRequest = frames(async (ctx) => {
   const [

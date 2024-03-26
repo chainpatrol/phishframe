@@ -94,32 +94,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@farcaster/core@npm:0.14.8":
-  version: 0.14.8
-  resolution: "@farcaster/core@npm:0.14.8"
-  dependencies:
-    "@noble/curves": "npm:^1.0.0"
-    "@noble/hashes": "npm:^1.3.0"
-    bs58: "npm:^5.0.0"
-    neverthrow: "npm:^6.0.0"
-    viem: "npm:^1.12.2"
-  checksum: 10c0/86a4d507fb3a7a5a94a5a2c139f48ef8248e1909fa28cdfdd3a5ab064b606add6efe5b8be6ea97207911ec1b42a78a477d277ee334c5af22aec1331fd9161eb3
-  languageName: node
-  linkType: hard
-
-"@farcaster/core@patch:@farcaster/core@npm%3A0.14.8#~/.yarn/patches/@farcaster-core-npm-0.14.8-0d1b22a716.patch":
-  version: 0.14.8
-  resolution: "@farcaster/core@patch:@farcaster/core@npm%3A0.14.8#~/.yarn/patches/@farcaster-core-npm-0.14.8-0d1b22a716.patch::version=0.14.8&hash=9cb28b"
-  dependencies:
-    "@noble/curves": "npm:^1.0.0"
-    "@noble/hashes": "npm:^1.3.0"
-    bs58: "npm:^5.0.0"
-    neverthrow: "npm:^6.0.0"
-    viem: "npm:^1.12.2"
-  checksum: 10c0/3e792ddd9a9f643f93667da8503e1b3b252e2f6edb7185c2248188776bd8c345d45b165c54eed3ee4ee31e7e50d5b2d34f660e3874a867dcda602f85d6ce10c1
-  languageName: node
-  linkType: hard
-
 "@humanwhocodes/config-array@npm:^0.11.14":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -298,26 +272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:^1.0.0":
-  version: 1.4.0
-  resolution: "@noble/curves@npm:1.4.0"
-  dependencies:
-    "@noble/hashes": "npm:1.4.0"
-  checksum: 10c0/31fbc370df91bcc5a920ca3f2ce69c8cf26dc94775a36124ed8a5a3faf0453badafd2ee4337061ffea1b43c623a90ee8b286a5a81604aaf9563bdad7ff795d18
-  languageName: node
-  linkType: hard
-
 "@noble/hashes@npm:1.3.2":
   version: 1.3.2
   resolution: "@noble/hashes@npm:1.3.2"
   checksum: 10c0/2482cce3bce6a596626f94ca296e21378e7a5d4c09597cbc46e65ffacc3d64c8df73111f2265444e36a3168208628258bbbaccba2ef24f65f58b2417638a20e7
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.4.0, @noble/hashes@npm:^1.3.0":
-  version: 1.4.0
-  resolution: "@noble/hashes@npm:1.4.0"
-  checksum: 10c0/8c3f005ee72e7b8f9cff756dfae1241485187254e3f743873e22073d63906863df5d4f13d441b7530ea614b7a093f0d889309f28b59850f33b66cb26a779a4a5
   languageName: node
   linkType: hard
 
@@ -666,21 +624,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"abitype@npm:0.9.8":
-  version: 0.9.8
-  resolution: "abitype@npm:0.9.8"
-  peerDependencies:
-    typescript: ">=5.0.4"
-    zod: ^3 >=3.19.1
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-    zod:
-      optional: true
-  checksum: 10c0/ec559461d901d456820faf307e21b2c129583d44f4c68257ed9d0d44eae461114a7049046e715e069bc6fa70c410f644e06bdd2c798ac30d0ada794cd2a6c51e
-  languageName: node
-  linkType: hard
-
 "abitype@npm:1.0.0":
   version: 1.0.0
   resolution: "abitype@npm:1.0.0"
@@ -1003,13 +946,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base-x@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "base-x@npm:4.0.0"
-  checksum: 10c0/0cb47c94535144ab138f70bb5aa7e6e03049ead88615316b62457f110fc204f2c3baff5c64a1c1b33aeb068d79a68092c08a765c7ccfa133eee1e70e4c6eb903
-  languageName: node
-  linkType: hard
-
 "base64-js@npm:0.0.8":
   version: 0.0.8
   resolution: "base64-js@npm:0.0.8"
@@ -1070,15 +1006,6 @@ __metadata:
   bin:
     browserslist: cli.js
   checksum: 10c0/8e9cc154529062128d02a7af4d8adeead83ca1df8cd9ee65a88e2161039f3d68a4d40fea7353cab6bae4c16182dec2fdd9a1cf7dc2a2935498cee1af0e998943
-  languageName: node
-  linkType: hard
-
-"bs58@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "bs58@npm:5.0.0"
-  dependencies:
-    base-x: "npm:^4.0.0"
-  checksum: 10c0/0d1b05630b11db48039421b5975cb2636ae0a42c62f770eec257b2e5c7d94cb5f015f440785f3ec50870a6e9b1132b35bd0a17c7223655b22229f24b2a3491d1
   languageName: node
   linkType: hard
 
@@ -2156,11 +2083,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"frames.js@npm:^0.9.5":
-  version: 0.9.5
-  resolution: "frames.js@npm:0.9.5"
+"frames.js@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "frames.js@npm:0.10.0"
   dependencies:
-    "@farcaster/core": "npm:^0.14.7"
     "@vercel/og": "npm:^0.6.2"
     cheerio: "npm:^1.0.0-rc.12"
     protobufjs: "npm:^7.2.6"
@@ -2170,7 +2096,7 @@ __metadata:
     next: ^14.1.0
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: 10c0/22ce6dd2217f938a53891cfac7226b6466d2c5b023e8fbbdb5745644018b219dd2b55895d20c58fc4241aadec63b782e02c24092c6c57a8774d705cc4776b39d
+  checksum: 10c0/f5d6cbe2ffc12c71fa973b384056d6b02ca85b27ad0cc7015836a0fc2f2bae32b70dc0522d5f5f76f260d1a02dd56dc3fee40028c109165d023aa137eeab9305
   languageName: node
   linkType: hard
 
@@ -2187,7 +2113,7 @@ __metadata:
     autoprefixer: "npm:^10.0.1"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.1.4"
-    frames.js: "npm:^0.9.5"
+    frames.js: "npm:^0.10.0"
     lucide-react: "npm:^0.363.0"
     next: "npm:14.1.4"
     normalize-url: "npm:^8.0.1"
@@ -3316,13 +3242,6 @@ __metadata:
   version: 0.6.3
   resolution: "negotiator@npm:0.6.3"
   checksum: 10c0/3ec9fd413e7bf071c937ae60d572bc67155262068ed522cf4b3be5edbe6ddf67d095ec03a3a14ebf8fc8e95f8e1d61be4869db0dbb0de696f6b837358bd43fc2
-  languageName: node
-  linkType: hard
-
-"neverthrow@npm:^6.0.0":
-  version: 6.1.0
-  resolution: "neverthrow@npm:6.1.0"
-  checksum: 10c0/4983600d84879c6e3ddd5f50281371a24b548446138d7108a11a131ba32e87369e875c046817913a489cfa8fcc7d518f7968988973bd880f69817b018aae294e
   languageName: node
   linkType: hard
 
@@ -4766,27 +4685,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 10c0/41a5bdd214df2f6c3ecf8622745e4a366c4adced864bc3c833739791aeeeb1838119af7daed4ba36428114b5c67dcda034a79c882e97e43c03e66a4dd7389942
-  languageName: node
-  linkType: hard
-
-"viem@npm:^1.12.2":
-  version: 1.21.4
-  resolution: "viem@npm:1.21.4"
-  dependencies:
-    "@adraffy/ens-normalize": "npm:1.10.0"
-    "@noble/curves": "npm:1.2.0"
-    "@noble/hashes": "npm:1.3.2"
-    "@scure/bip32": "npm:1.3.2"
-    "@scure/bip39": "npm:1.2.1"
-    abitype: "npm:0.9.8"
-    isows: "npm:1.0.3"
-    ws: "npm:8.13.0"
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/8b29c790181e44c4c95b9ffed1a8c1b6c2396eb949b95697cc390ca8c49d88ef9e2cd56bd4800b90a9bbc93681ae8d63045fc6fa06e00d84f532bef77967e751
   languageName: node
   linkType: hard
 
