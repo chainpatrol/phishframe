@@ -7,7 +7,7 @@ import { Layout } from "~/components/Layout";
 import { Status } from "~/components/Status";
 import { chainpatrol } from "~/lib/chainpatrol";
 import { FontLoader } from "~/lib/font-loader";
-import { frames } from "~/lib/frames";
+import { createFrames } from "~/lib/frames";
 import { ImageOptions } from "~/lib/types";
 import { trimTrailingSlashes } from "~/lib/utils";
 
@@ -15,11 +15,9 @@ export const runtime = "edge";
 
 const fontLoader = new FontLoader().preload();
 
-const handleRequest = frames(async ({ searchParams, message }) => {
-  const imageOptions = {
-    fonts: await fontLoader.resolveFontData(),
-  } as ImageOptions;
+const frames = createFrames({ includeHubsMiddleware: true });
 
+const handleRequest = frames(async ({ searchParams, message }) => {
   try {
     const content = (() => {
       try {
@@ -76,6 +74,10 @@ const handleRequest = frames(async ({ searchParams, message }) => {
     const reportUrl = `${trimTrailingSlashes(
       process.env.CHAINPATROL_APP_URL!
     )}/reports/${result.id}`;
+
+    const imageOptions = {
+      fonts: await fontLoader.resolveFontData(),
+    } as ImageOptions;
 
     return {
       imageOptions,
@@ -140,6 +142,11 @@ const handleRequest = frames(async ({ searchParams, message }) => {
     };
   } catch (e) {
     console.error(e);
+
+    const imageOptions = {
+      fonts: await fontLoader.resolveFontData(),
+    } as ImageOptions;
+
     return {
       imageOptions,
       image: (

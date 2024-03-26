@@ -3,10 +3,12 @@
 import { Button } from "frames.js/next";
 import { Layout } from "~/components/Layout";
 import { FontLoader } from "~/lib/font-loader";
+import { createFrames } from "~/lib/frames";
 import { ImageOptions } from "~/lib/types";
-import { frames } from "~/lib/frames";
 
 export const runtime = "edge";
+
+const frames = createFrames();
 
 const fontLoader = new FontLoader().preload();
 

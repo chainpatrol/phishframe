@@ -7,11 +7,13 @@ import { Layout } from "~/components/Layout";
 import { Status } from "~/components/Status";
 import { chainpatrol } from "~/lib/chainpatrol";
 import { FontLoader } from "~/lib/font-loader";
-import { frames } from "~/lib/frames";
+import { createFrames } from "~/lib/frames";
 import { ImageOptions } from "~/lib/types";
 import { trimTrailingSlashes } from "~/lib/utils";
 
 export const runtime = "edge";
+
+const frames = createFrames();
 
 const fontLoader = new FontLoader().preload();
 
