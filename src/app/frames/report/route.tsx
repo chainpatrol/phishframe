@@ -15,6 +15,15 @@ export const runtime = "edge";
 
 const fontLoader = new FontLoader().preload();
 
+const imagePromise = fetch(
+  new URL("/public/images/frame-shell.png", import.meta.url)
+)
+  .then((res) => res.arrayBuffer())
+  .then((buffer) => {
+    const base64 = Buffer.from(buffer).toString("base64");
+    return `data:image/png;base64,${base64}`;
+  });
+
 const frames = createFrames({ includeHubsMiddleware: true });
 
 const handleRequest = frames(async ({ searchParams, message }) => {
@@ -75,14 +84,17 @@ const handleRequest = frames(async ({ searchParams, message }) => {
       process.env.CHAINPATROL_APP_URL!
     )}/reports/${result.id}`;
 
-    const imageOptions = {
-      fonts: await fontLoader.resolveFontData(),
-    } as ImageOptions;
+    const [imageData, fontData] = await Promise.all([
+      imagePromise,
+      fontLoader.resolveFontData(),
+    ]);
+
+    const imageOptions = { fonts: fontData } as ImageOptions;
 
     return {
       imageOptions,
       image: (
-        <Layout>
+        <Layout imageData={imageData}>
           <div tw="flex flex-col h-full mt-8 text-2xl">
             <div tw="flex mt-2 mb-4">
               <span tw="mr-4">$ </span>
@@ -143,17 +155,22 @@ const handleRequest = frames(async ({ searchParams, message }) => {
   } catch (e) {
     console.error(e);
 
-    const imageOptions = {
-      fonts: await fontLoader.resolveFontData(),
-    } as ImageOptions;
+    const [imageData, fontData] = await Promise.all([
+      imagePromise,
+      fontLoader.resolveFontData(),
+    ]);
+
+    const imageOptions = { fonts: fontData } as ImageOptions;
 
     return {
       imageOptions,
       image: (
-        <ErrorMessage
-          op="report"
-          error={e instanceof Error ? e.message : "Unknown error occurred"}
-        />
+        <Layout imageData={imageData}>
+          <ErrorMessage
+            op="report"
+            error={e instanceof Error ? e.message : "Unknown error occurred"}
+          />
+        </Layout>
       ),
       buttons: [
         <Button action="post" target="/">

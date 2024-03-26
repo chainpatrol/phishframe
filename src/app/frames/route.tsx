@@ -12,15 +12,28 @@ const frames = createFrames();
 
 const fontLoader = new FontLoader().preload();
 
+// Convert to base64
+const imagePromise = fetch(
+  new URL("/public/images/frame-shell.png", import.meta.url)
+)
+  .then((res) => res.arrayBuffer())
+  .then((buffer) => {
+    const base64 = Buffer.from(buffer).toString("base64");
+    return `data:image/png;base64,${base64}`;
+  });
+
 const handleRequest = frames(async (_ctx) => {
-  const imageOptions = {
-    fonts: await fontLoader.resolveFontData(),
-  } as ImageOptions;
+  const [imageData, fontData] = await Promise.all([
+    imagePromise,
+    fontLoader.resolveFontData(),
+  ]);
+
+  const imageOptions = { fonts: fontData } as ImageOptions;
 
   return {
     imageOptions,
     image: (
-      <Layout>
+      <Layout imageData={imageData}>
         <div tw="flex flex-col justify-center h-full text-2xl">
           <div tw="flex mt-2 mb-4">
             <span tw="mr-4">$ </span>
