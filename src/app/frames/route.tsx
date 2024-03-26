@@ -254,42 +254,21 @@ function Logo(props: React.SVGProps<SVGSVGElement>) {
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div tw="w-screen h-screen bg-neutral-900 text-white flex flex-col items-center justify-center p-8 pb-4">
-      <div tw="flex flex-col bg-neutral-800 p-12 rounded-xl border border-white/30 shadow-lg w-full flex-1 relative">
-        <div tw="flex items-center absolute top-0 left-0 right-0 px-4 py-3">
-          {/* Mac stop lights */}
-          <div tw="flex">
-            <div tw="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
-            <div tw="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
-            <div tw="w-4 h-4 bg-green-500 rounded-full"></div>
-          </div>
-
-          <div tw="flex-1 justify-center flex text-white/50 text-lg">
-            <span>📁</span>
-            <span tw="ml-2">Farcaster</span>
-            <span tw="ml-2">•</span>
-            <span tw="ml-2">ChainPatrol</span>
-            <span tw="ml-2">•</span>
-            <span tw="ml-2">PhishFrame</span>
-          </div>
-
-          <div tw="flex">
-            <span tw="text-white/50 text-lg">🔒</span>
-          </div>
+    <div tw="h-screen w-screen relative flex flex-col text-white items-center justify-center">
+      <img
+        src={`${
+          (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ??
+          (process.env.RAILWAY_PUBLIC_DOMAIN &&
+            `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`) ??
+          "http://localhost:3001"
+        }/images/frame-shell.png`}
+        alt="Frame shell"
+        tw="absolute top-0 left-0 right-0 bottom-0 w-full"
+      />
+      <div tw="flex w-screen h-screen px-8 py-24">
+        <div tw="flex flex-col width-full flex-1 relative px-8 py-2">
+          {children}
         </div>
-        {children}
-      </div>
-      <div tw="flex items-center justify-between py-2 mt-4 w-full">
-        <div tw="flex items-center justify-center">
-          <Logo style={{ width: "50px", height: "50px" }} />
-          <span tw="font-bold tracking-tighter text-white/90 text-3xl ml-3">
-            ChainPatrol
-          </span>
-        </div>
-
-        <span tw="text-white/50 text-[24px]">
-          Follow us <span tw="text-white/70 ml-2 font-bold">@chainpatrol</span>
-        </span>
       </div>
     </div>
   );
