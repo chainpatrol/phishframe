@@ -4,7 +4,7 @@ import { Button } from "frames.js/next";
 import normalizeUrl from "normalize-url";
 import { ErrorMessage } from "~/components/ErrorMessage";
 import { Layout } from "~/components/Layout";
-import { Status } from "~/components/Status";
+// import { Status } from "~/components/Status";
 import { chainpatrol } from "~/lib/chainpatrol";
 import { FontLoader } from "~/lib/font-loader";
 import { createFrames } from "~/lib/frames";
@@ -26,9 +26,50 @@ const imagePromise = fetch(
     return `data:image/png;base64,${base64}`;
   });
 
+const allowedImagePromise = fetch(
+  new URL("/public/images/frame-check-allowed.png", import.meta.url)
+)
+  .then((res) => res.arrayBuffer())
+  .then((buffer) => {
+    const base64 = Buffer.from(buffer).toString("base64");
+    return `data:image/png;base64,${base64}`;
+  });
+
+const blockedImagePromise = fetch(
+  new URL("/public/images/frame-check-blocked.png", import.meta.url)
+)
+  .then((res) => res.arrayBuffer())
+  .then((buffer) => {
+    const base64 = Buffer.from(buffer).toString("base64");
+    return `data:image/png;base64,${base64}`;
+  });
+
+const unknownImagePromise = fetch(
+  new URL("/public/images/frame-check-unknown.png", import.meta.url)
+)
+  .then((res) => res.arrayBuffer())
+  .then((buffer) => {
+    const base64 = Buffer.from(buffer).toString("base64");
+    return `data:image/png;base64,${base64}`;
+  });
+
 const handleRequest = frames(async ({ searchParams, message }) => {
-  const [imageData, fontData] = await Promise.all([
+  // const [imageData, fontData] = await Promise.all([
+  //   imagePromise,
+  //   fontLoader.resolveFontData(),
+  // ]);
+
+  const [
+    baseImageData,
+    allowedImageData,
+    blockedImageData,
+    unknownImageData,
+    fontData,
+  ] = await Promise.all([
     imagePromise,
+    allowedImagePromise,
+    blockedImagePromise,
+    unknownImagePromise,
     fontLoader.resolveFontData(),
   ]);
 
@@ -68,40 +109,53 @@ const handleRequest = frames(async ({ searchParams, message }) => {
       content,
     });
 
+    const imageData = (() => {
+      if (result.status === "ALLOWED") {
+        return allowedImageData;
+      }
+
+      if (result.status === "BLOCKED") {
+        return blockedImageData;
+      }
+
+      return unknownImageData;
+    })();
+
     return {
       imageOptions,
-      image: (
-        <Layout imageData={imageData}>
-          <div tw="flex flex-col h-full mt-8 text-2xl">
-            <div tw="flex mt-2 mb-4">
-              <span tw="mr-4">$ </span>
-              <span tw="mr-3">phishframe check</span>
-              <span tw="text-purple-300">$INPUT</span>
-            </div>
+      image: <img src={imageData} alt="PhishFrame Check" tw="w-full h-full" />,
+      // image: (
+      //   <Layout imageData={imageData}>
+      //     <div tw="flex flex-col h-full mt-8 text-2xl">
+      //       <div tw="flex mt-2 mb-4">
+      //         <span tw="mr-4">$ </span>
+      //         <span tw="mr-3">phishframe check</span>
+      //         <span tw="text-purple-300">$INPUT</span>
+      //       </div>
 
-            {result.status === "ALLOWED" && (
-              <div tw="flex items-center">
-                <span tw="mr-2">Status:</span>
-                <Status status="ALLOWED" />
-              </div>
-            )}
+      //       {result.status === "ALLOWED" && (
+      //         <div tw="flex items-center">
+      //           <span tw="mr-2">Status:</span>
+      //           <Status status="ALLOWED" />
+      //         </div>
+      //       )}
 
-            {result.status === "BLOCKED" && (
-              <div tw="flex items-center">
-                <span tw="mr-2">Status:</span>
-                <Status status="BLOCKED" />
-              </div>
-            )}
+      //       {result.status === "BLOCKED" && (
+      //         <div tw="flex items-center">
+      //           <span tw="mr-2">Status:</span>
+      //           <Status status="BLOCKED" />
+      //         </div>
+      //       )}
 
-            {(result.status === "UNKNOWN" || result.status === "IGNORED") && (
-              <div tw="flex items-center">
-                <span tw="mr-2">Status:</span>
-                <Status status="UNKNOWN" />
-              </div>
-            )}
-          </div>
-        </Layout>
-      ),
+      //       {(result.status === "UNKNOWN" || result.status === "IGNORED") && (
+      //         <div tw="flex items-center">
+      //           <span tw="mr-2">Status:</span>
+      //           <Status status="UNKNOWN" />
+      //         </div>
+      //       )}
+      //     </div>
+      //   </Layout>
+      // ),
       buttons: [
         <Button action="post" target="/">
           ← Back to Home
@@ -134,7 +188,7 @@ const handleRequest = frames(async ({ searchParams, message }) => {
     return {
       imageOptions,
       image: (
-        <Layout imageData={imageData}>
+        <Layout imageData={baseImageData}>
           <ErrorMessage
             op="check"
             error={e instanceof Error ? e.message : "Unknown error occurred"}
