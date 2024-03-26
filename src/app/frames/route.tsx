@@ -55,7 +55,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         tw="absolute top-0 left-0 right-0 bottom-0 w-full"
       />
       <div tw="flex w-screen h-screen px-8 py-24">
-        <div tw="flex flex-col width-full flex-1 relative px-8 py-2">
+        <div tw="flex flex-col w-full flex-1 relative px-8 py-2">
           {children}
         </div>
       </div>
