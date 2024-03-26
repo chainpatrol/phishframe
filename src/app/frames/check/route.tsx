@@ -16,50 +16,40 @@ export const runtime = "edge";
 const fontLoader = new FontLoader().preload();
 
 const handleRequest = frames(async ({ searchParams, message }) => {
-  console.log("handleRequest");
   const imageOptions = {
     fonts: await fontLoader.resolveFontData(),
   } as ImageOptions;
 
-  const content = (() => {
-    try {
-      const url = new URL(
-        searchParams.content ??
-          (message?.inputText
-            ? normalizeUrl(message?.inputText?.trim()) ?? ""
-            : "")
-      );
-
-      return url.toString();
-    } catch (e) {
-      return null;
-    }
-  })();
-
-  const error = (() => {
-    if (content === null) {
-      return "Invalid URL";
-    }
-
-    if (content === "") {
-      return "Empty URL";
-    }
-  })();
-
-  if (error) {
-    console.error(error);
-    return {
-      imageOptions,
-      image: <ErrorMessage op="check" error={error} />,
-      buttons: [
-        <Button action="post" target="/">
-          ← Back to Home
-        </Button>,
-      ],
-    };
-  }
-
   try {
+    const content = (() => {
+      try {
+        const url = new URL(
+          searchParams.content ??
+            (message?.inputText
+              ? normalizeUrl(message?.inputText?.trim()) ?? ""
+              : "")
+        );
+
+        return url.toString();
+      } catch (e) {
+        return null;
+      }
+    })();
+
+    const error = (() => {
+      if (content === null) {
+        return "Invalid URL";
+      }
+
+      if (content === "") {
+        return "Empty URL";
+      }
+    })();
+
+    if (error) {
+      throw new Error(error);
+    }
+
     const result = await chainpatrol.asset.check({
       content,
     });
